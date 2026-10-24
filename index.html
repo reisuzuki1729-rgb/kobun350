@@ -421,43 +421,43 @@
     <script>
         const DEFAULT_VOCAB = [
             { id: 51, word: "つきづきし", reading: "つきづきし", meaning: "①似つかわしい・ふさわしい", origin: "「似つかわしい・しっくり合っている」意味。「ピッタリ！」と対象に合わせて訳す。", example: "霜のいと白きも、またさらでも、いと寒きに、火など急ぎおこして、炭持て渡るも、いとつきづきし。", learned: false },
-            { id: 52, word: "あさまし", reading: "あさまし", meaning: "①驚いたことだ（主にマイナス） ②あきれたことだ・情けない", origin: "語源は「あさむ（驚く）」。口をアングリ開けてしまうような意外な驚き・呆れ。", example: "かかる人の、撰集承りておはするは、あさましきことかな。", learned: false },
-            { id: 53, word: "いとほし", reading: "いとほし", meaning: "①気の毒だ・かわいそうだ ②かわいい", origin: "他人に同情して気の毒がる。または愛おしく可愛い様子。", example: "見に、打ぜんこといとほしくおぼえ頂ければ...", learned: false },
-            { id: 54, word: "ゆかし", reading: "ゆかし", meaning: "①行きたい・見たい・聞きたい・知りたい ②心ひかれる", origin: "「行きたい」が語源。知りたい・見たいと心が強く惹かれる様子。", example: "いかなる人の、かく弾き奏づるならむ、と、わりなくゆかしけれど...", learned: false },
-            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている ②身分が高い・教養がある", origin: "絶対的評価を表す語で最高。「よい」や身分・教養的高さを表す。", example: "中ごろは、よき人々、市に行きてなむ色彩ふはい。", learned: false },
-            { id: 56, word: "よろし", reading: "よろし", meaning: "①悪くない ②普通だ・ありふれている", origin: "相対的評価を表す語。「悪くはない」「まあまあだ」。", example: "春ごとに咲くとして、桜をよろしふ思ふ人はいかがたるうが...", learned: false },
-            { id: 57, word: "わろし", reading: "わろし", meaning: "①相対的に悪い・よくない", origin: "相対的評価を表す語で「よくない」。", example: "九月ばかりの時節なので、このころ鳥の味わいが、わろし。", learned: false },
+            { id: 52, word: "あさまし", reading: "あさまし", meaning: "①驚いたことだ ②あきれたことだ・情けない", origin: "語源は「あさむ（驚く）」。口をアングリ開けてしまうような意外な驚き・呆れ。", example: "かかる人の、撰集承りておはするは、あさましきことかな。", learned: false },
+            { id: 53, word: "いとほし", reading: "いとほし", meaning: "①気の毒だ・かわいそうだ ②かわいい", origin: "他人に同情して気の毒がる。または愛おしく可愛い様子。", example: "身に打せむこといとほしくおぼえ頂ければ、え打たせで置きつ。", learned: false },
+            { id: 54, word: "ゆかし", reading: "ゆかし", meaning: "①行きたい・見たい・聞きたい・知りたい ②心ひかれる", origin: "「行きたい」が語源。知りたい・見たいと心が強く惹かれる様子。", example: "いかなる人の、かく弾き奏づるならむと、わりなくゆかしけれど...", learned: false },
+            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている ②身分が高い・教養がある", origin: "絶対的評価を表す語で最高。「よい」や身分・教養ฝ的高さを表す。", example: "中ごろは、よき人々、市に行きてなむ買ひ給ひける。", learned: false },
+            { id: 56, word: "よろし", reading: "よろし", meaning: "①悪くない ②普通だ・ありふれている", origin: "相対的評価を表す語。「悪くはない」「まあまあだ」。", example: "春ごとに咲くとて、桜をよろしう思ふ人やはある。", learned: false },
+            { id: 57, word: "わろし", reading: "わろし", meaning: "①相対的に悪い・よくない", origin: "相対的評価を表す語で「よくない」。", example: "九月ばかりのころ、このころ鳥のあぢはひ、わろし。", learned: false },
             { id: 58, word: "あし", reading: "あし", meaning: "①絶対的に悪い", origin: "絶対的評価を表す語で最低。「あしき（悪い）」の対義語は「よし」。", example: "わが子をしも、かく情けなく罷むは、いとあしきことなり。", learned: false },
             { id: 59, word: "かひなし", reading: "かいなし", meaning: "①無駄だ・甲斐がない ②どうしようもない", origin: "甲斐（効果・価値）が無い。「かひ（代ひ・交ふ）」から生まれた言葉。", example: "泣き顔作り、けしき気にせど、いとかひなし。", learned: false },
             { id: 60, word: "いはけなし", reading: "いわけなし", meaning: "①幼い", origin: "「いはけ」＋「なし（接尾語）」。幼く、無心で可愛らしい様子。", example: "いはけなきほどより、学問に心を入れて侍りしに...", learned: false },
             { id: 61, word: "なつかし", reading: "なつかし", meaning: "①心ひかれる・好ましい", origin: "動詞「懐く」を形容詞化した語で「親しみが持てる・惹きつけられる」。", example: "花橘の香のなつかしきに、ほととぎすの鳴くを...", learned: false },
-            { id: 62, word: "あはれなり", reading: "あわれなり", meaning: "①しみじみと趣深い ②しみじみと悲しい ③愛おしい", origin: "「あぁ、はれ」という感嘆詞が語源。文脈に応じて＋/ーをチェック。", example: "月のたいそう明るい面に薄い雲がかかって文言の、しみじみと深い。", learned: false },
-            { id: 63, word: "おろかなり", reading: "おろなり", meaning: "①おろそかだ・いい加減だ ②愚かだ", origin: "行動や心にスキが多くバラバラな感じ。「いい加減だ」という意味で頻出。", example: "帝の御敵を、いかでかおろかにせむ。", learned: false },
+            { id: 62, word: "あはれなり", reading: "あわれなり", meaning: "①しみじみと趣深い ②しみじみと悲しい ③愛おしい", origin: "「あぁ、はれ」という感嘆詞が語源。文脈に応じて＋/ーをチェック。", example: "月のいと明きに、差しいでたる雲の細き、いとあはれなり。", learned: false },
+            { id: 63, word: "おろなり", reading: "おろなり", meaning: "①おろそかだ・いい加減だ ②愚かだ", origin: "行動や心にスキが多くバラバラな感じ。「いい加減だ」という意味で頻出。", example: "帝の御敵を、いかでかおろかにせむ。", learned: false },
             { id: 64, word: "をこなり", reading: "おこなり", meaning: "①愚かだ・愚かしい", origin: "「をこ（烏滸・愚か者）」から。「愚かだ」「バカバカしい」の意。", example: "をこなる者の、文を書きて人に送るやうに...", learned: false },
             { id: 65, word: "あてなり", reading: "あてなり", meaning: "①高貴だ ②上品だ・優雅だ", origin: "「貴」＝「高貴だ・上品だ」。品があって美しく洗練されている様子。", example: "あてなる女の尼になりて、世の中を思ひひらむ...", learned: false },
             { id: 66, word: "いたづらなり", reading: "いたずらなり", meaning: "①無駄だ・無益だ ②ひまだ", origin: "「いたづら（徒ら）」＝何の効果もなく無駄なこと。「むなしい」。", example: "この庭のいたづらに広きこと、あさましく、あるべからぬことなり。", learned: false },
             { id: 67, word: "せちなり", reading: "せちなり", meaning: "①切実だ ②大切だ", origin: "「切に」の形でも多用される。感情が痛切にこみ上げる様・ひたすらな様。", example: "七月十五日の月に押し出て、せちに物思へる気色なり。", learned: false },
-            { id: 68, word: "あながちなり", reading: "あながちなり", meaning: "①強引だ ②筋が通らない・身勝手だ ③【下に打ち消しで】必ずしも（〜ない）", origin: "漢字「強」から「強引・強硬・無茶苦茶」のイメージ。", example: "桜が散ることは、あながちに文句にする事もできないので...", learned: false },
+            { id: 68, word: "あながちなり", reading: "あながちなり", meaning: "①強引だ ②筋が通らない・身勝手だ ③【下に打ち消しで】必ずしも（〜ない）", origin: "漢字「強」から「強引・強硬・無茶苦茶」のイメージ。", example: "桜の散るを、あながちに怨み奉るべきにもあらざれど...", learned: false },
             { id: 69, word: "みそかなり", reading: "みそかなり", meaning: "①【人目を忍んで】ひそかに・こっそり", origin: "「みそか」は密か。人目を忍んでひそかに行動する様子。", example: "親しき人のもとへ行き通ひけるほどに、奴を思ひかけて、みそかに通ひにけり。", learned: false },
-            { id: 70, word: "つれづれなり", reading: "つれづれなり", meaning: "①退屈だ・手持ちぶさだが ②物寂しい", origin: "「連れ＋連れ」。やるべき事がなく退屈でつくづく寂しい状態。", example: "雨いたう降りてつれづれなりとて、殿上人、上の御局にて碁打ちあそび...", learned: false },
+            { id: 70, word: "つれづれなり", reading: "つれづれなり", meaning: "①退屈だ・手持ちぶさだが ②物寂しい", origin: "「連れ＋連れ」。やるべき事がなく退屈でつくづく寂しい状態。", example: "雨いたう降りてつれづれなりとて、殿上人、上の御局にて碁打ちあそび給ふ。", learned: false },
             { id: 71, word: "かげ", reading: "かげ", meaning: "①光 ②姿・面影 ③影", origin: "「光」を表すのが最重要（月のかげ・日のかげなど）。", example: "板閣より漏り来る月の影のみぞ、実に変らぬ昔の光なりける。", learned: false },
             { id: 72, word: "つとめて", reading: "つとめて", meaning: "①早朝 ②翌朝", origin: "「つと」は早いという意味。「翌朝」または「早朝」の意。", example: "十五日のつとめては、深草の法華堂にお参りしたるに...", learned: false },
             { id: 73, word: "かたち", reading: "かたち", meaning: "①容貌・顔立ち", origin: "顔立ちや容姿を表す。現代の「体型・形状」とは異なり顔中心。", example: "まみつき、いと愛敬づき、はなやかなるかたちなり。", learned: false },
-            { id: 74, word: "けしき", reading: "けしき", meaning: "①様子・風情 ②機嫌・意向 ③顔色・表情", origin: "「気色」。外から見てわかる人の様子・表情や自然の様子。", example: "今日、風雲のけしきははだ悪し、と語りて...", learned: false },
-            { id: 75, word: "せうそこ", reading: "しょうそこ", meaning: "①訪問して来意を告げること・挨拶すること ②手紙（を書くこと）", origin: "「消息」。連絡を取る・挨拶訪問する・手紙を送る。", example: "いづれ、気消息聞こえむ。", learned: false },
-            { id: 76, word: "うつつ", reading: "うつつ", meaning: "①現実 ②正気", origin: "「現」。夢と対比される現実世界、または意識がはっきりした正気の状態。", example: "夢かと思ふとおふ心と現実とおぼゆ。", learned: false },
+            { id: 74, word: "けしき", reading: "けしき", meaning: "①様子・風情 ②機嫌・意向 ③顔色・表情", origin: "「気色」。外から見てわかる人の様子・表情や自然の様子。", example: "今日、風雲のけしきはいとはだ悪しと語りて...", learned: false },
+            { id: 75, word: "せうそこ", reading: "しょうそこ", meaning: "①訪問して来意を告げること・挨拶すること ②手紙（を書くこと）", origin: "「消息」。連絡を取る・挨拶訪問する・手紙を送る。", example: "いづれ、御消息聞こえむ。", learned: false },
+            { id: 76, word: "うつつ", reading: "うつつ", meaning: "①現実 ②正気", origin: "「現」。夢と対比される現実世界、または意識がはっきりした正気の状態。", example: "夢かとおもふ心と現実とおぼゆ。", learned: false },
             { id: 77, word: "こと", reading: "こと", meaning: "①言葉 ②和歌 ③事柄・事実", origin: "漢字「言」または「事」。文脈により「言葉・和歌」か「出来事」かを判別する。", example: "言の葉を重ねても、思ふ心を尽くしがたし。", learned: false },
             { id: 78, word: "としごろ", reading: "としごろ", meaning: "①長年・数年来", origin: "「年頃」。数年の間、長年にわたって。", example: "としごろ思ひつる事、果たし侍りぬ。", learned: false },
             { id: 79, word: "ひごろ", reading: "ひごろ", meaning: "①数日来・ここ数日 ②普段・日頃", origin: "「日頃」。ここ数日の間、または日ごろ日常的に。", example: "ひごろ訪ね聞こえざりつるは、障る事ありて...", learned: false },
-            { id: 80, word: "うち・おほやけ", reading: "うち・おおやけ", meaning: "①宮中・内裏 ②帝・天皇 ③公的なこと", origin: "「内・公」。私に対する「公（おおやけ）」、内裏・帝を表す最高重要語。", example: "うちへ参り給ふ。おほやけの御使ひとして...", learned: false },
-            { id: 81, word: "くもゐ", reading: "くもい", meaning: "①宮中・内裏 ②都 ③雲遠く離れた所", origin: "「雲居」。雲の上の遠い場所。転じて、雲の上と例えられた「宮中・内裏」を指す。", example: "くもゐの空を眺めつつ、帝を思ひ聞こえ給ふ。", learned: false },
+            { id: 80, word: "おほやけ", reading: "おおやけ", meaning: "①公的なこと ②朝廷・幕府 ③帝・天皇", origin: "私に対する「公（おおやけ）」、朝廷や帝を表す最高重要語。", example: "おほやけの御使ひとして、東国へ下り給ふ。", learned: false },
+            { id: 81, word: "うち", reading: "うち", meaning: "①宮中・内裏 ②帝・天皇", origin: "「内」。雲の上の内裏・宮中や帝ご自身を表す。", example: "うちへ参り給ひて、御前におはします。", learned: false },
             { id: 82, word: "なさけ", reading: "なさけ", meaning: "①思いやり ②風流心・情緒", origin: "「情け」。人に対する思いやりの心、および自然や風流を解する心。", example: "なさけある人の心には、いと哀れにおぼゆべし。", learned: false },
             { id: 83, word: "て", reading: "て", meaning: "①文字・筆跡 ②演奏法・曲", origin: "「手」。手から生み出される「文字・筆跡」や、楽器の「演奏法・曲」を表す。", example: "ていとあやしく書きて、人に取らせ給ふ。", learned: false },
             { id: 84, word: "よ・よのなか", reading: "よ・よのなか", meaning: "①男女の仲・夫婦関係 ②世間・社会", origin: "「世・世の中」。平安時代の最大の関心事である「男女の仲」を表す重要語。", example: "よのなかを思い嘆く、二人のかたらひ。", learned: false },
             { id: 85, word: "あいぎやう", reading: "あいぎょう", meaning: "①かわいらしさ・愛嬌 ②思いやり", origin: "「愛敬」。人に愛されるような魅力や可愛らしさ、にこやかさ。", example: "あいぎやうこぼれるばかりにて、いと愛し。", learned: false },
             { id: 86, word: "きは", reading: "きわ", meaning: "①身分・分限 ②端・限り", origin: "「際」。ものの境目や限界。転じて人の「身分・分限」を表す。", example: "貴きも賤しきもきはに従ひて、集まり給ふ。", learned: false },
             { id: 87, word: "ほど", reading: "ほど", meaning: "①時間・ころ ②身分・段階 ③程度", origin: "「程」。時間・空間・程度などの「あいだ・範囲」。人間の身分も表す。", example: "出で給ふほどに、夜も明けぬ。", learned: false },
-            { id: 88, word: "やがて", reading: "やがて", meaning: "①そのまま ②すぐに・直ちに", origin: "「そのまま（状態の継続）」と「すぐに（時間の連続）」の2大意味をマスター。", example: "やがて起きもあがで、伏し給へり。", learned: false },
+            { id: 88, word: "やがて", reading: "やがて", meaning: "①そのまま ②すぐに・直ちに", origin: "「そのまま（状態の継続）」と「すぐに（時間の連続）」の2大意味をマスター。", example: "やがて起きもあがらで、伏し給へり。", learned: false },
             { id: 89, word: "すなはち", reading: "すなわち", meaning: "①すぐに・即座に", origin: "「即ち」。間を置かずに「すぐに・直ちに」動作を行う様子。", example: "すなはち立ちて出でぬ。", learned: false },
             { id: 90, word: "なほ", reading: "なお", meaning: "①やはり ②いっそう・ますます", origin: "「直」。文脈によって「そうは言ってもやはり」か「さらに一層」かを判断。", example: "なほ言ひてむとて、立ち止まり給ふ。", learned: false },
             { id: 91, word: "おのづから", reading: "おのずから", meaning: "①自然と・ひとりでに ②たまたま・偶然 ③【仮定で】万一・もしも", origin: "「自ら」。自然とそうなること。文頭の仮定文では「万一」と訳す。", example: "おのづから心得むと、念じ給ふ。", learned: false },
@@ -509,7 +509,7 @@
         }
 
         function loadVocabData() {
-            const saved = localStorage.getItem('kobun_vocab_51_100_v4');
+            const saved = localStorage.getItem('kobun_vocab_51_100_v5');
             if (saved) {
                 try {
                     vocabList = JSON.parse(saved);
@@ -522,12 +522,12 @@
         }
 
         function saveVocabData() {
-            localStorage.setItem('kobun_vocab_51_100_v4', JSON.stringify(vocabList));
+            localStorage.setItem('kobun_vocab_51_100_v5', JSON.stringify(vocabList));
             updateDashboard();
         }
 
         function loadNewsData() {
-            const saved = localStorage.getItem('kobun_news_data_v2');
+            const saved = localStorage.getItem('kobun_news_data_v3');
             if (saved) {
                 try {
                     newsList = JSON.parse(saved);
@@ -540,7 +540,7 @@
         }
 
         function saveNewsData() {
-            localStorage.setItem('kobun_news_data_v2', JSON.stringify(newsList));
+            localStorage.setItem('kobun_news_data_v3', JSON.stringify(newsList));
             renderNews();
         }
 
@@ -677,8 +677,8 @@
         }
 
         function deleteNewsItem(id) {
-            const pwd = prompt("削除用のパスワードを入力してください (1234)");
-            if (pwd === "1234") {
+            const pwd = prompt("削除用のパスワードを入力してください");
+            if (pwd === "6174") {
                 newsList = newsList.filter(n => n.id !== id);
                 saveNewsData();
                 showMessage('お知らせを削除しました');
@@ -796,7 +796,7 @@
             }
         }
 
-        // Helper to mask word in sentence for Fill-in-the-blank quiz
+        // Helper to mask word in sentence for Fill-in-the-blank quiz (Only in Quiz mode)
         function maskExampleSentence(sentence, targetWord) {
             if (!sentence) return "【 （　　） 】";
             let masked = sentence;
@@ -815,8 +815,6 @@
                 const core = targetWord.slice(0, 2);
                 if (sentence.includes(core)) {
                     masked = sentence.replace(new RegExp(core + '[ぁ-ん]*', 'g'), '（　　）');
-                } else {
-                    masked = sentence + ' ➔ （　　）';
                 }
             }
             return masked;
@@ -1025,4 +1023,3 @@
     </script>
 </body>
 </html>
-```
