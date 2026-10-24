@@ -212,7 +212,11 @@
                         </label>
                         <label class="border border-indigo-300 bg-indigo-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-indigo-100/50">
                             <input type="radio" name="quizType" value="input" class="text-indigo-600">
-                            <span class="text-xs font-bold text-indigo-900">✍️ 記述（キーボード入力）：意味 ➔ 古文単語入力</span>
+                            <span class="text-xs font-bold text-indigo-900">✍️ 記述：意味 ➔ 古文単語入力</span>
+                        </label>
+                        <label class="border border-emerald-300 bg-emerald-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-100/50">
+                            <input type="radio" name="quizType" value="input_example" class="text-indigo-600">
+                            <span class="text-xs font-bold text-emerald-900">✍️ 記述：例文（穴埋め）➔ 古文単語入力</span>
                         </label>
                     </div>
 
@@ -491,8 +495,8 @@
         ];
 
         const DEFAULT_NEWS = [
-            { id: 1, date: "2026/10/25", title: "✍️ 記述（キーボード入力）テストを追加！", content: "クイズモードに「記述（キーボード入力）」を追加しました！現代語訳から古文単語を直接キーボードで打ち込んで解答する実戦モードです！" },
-            { id: 2, date: "2026/10/25", title: "🎉 お知らせページを追加！", content: "「お知らせ・アップデート情報」ページを追加しました！新機能やアップデート情報をここからチェックできるようになりました！ぜひご活用ください！" },
+            { id: 1, date: "2026/10/25", title: "🎉 お知らせページを追加！", content: "「お知らせ・アップデート情報」ページを追加しました！新機能やアップデート情報をここからチェックできるようになりました！ぜひご活用ください！" },
+            { id: 2, date: "2026/10/25", title: "✍️ 記述（キーボード入力）テストを追加！", content: "クイズモードに「記述（キーボード入力）」を追加しました！現代語訳から古文単語を直接キーボードで打ち込んで解答する実戦モードです！" },
             { id: 3, date: "2026/10/25", title: "✨ 例文穴埋めクイズを追加！", content: "4択クイズに「例文穴埋めモード」を追加しました！文脈から適切な古文単語を推理する実戦力を磨きましょう！" }
         ];
 
@@ -890,14 +894,21 @@
             const optionsContainer = document.getElementById('quiz-options');
             const inputContainer = document.getElementById('quiz-input-container');
 
-            if (q.type === 'input') {
-                // Input Mode
+            if (q.type === 'input' || q.type === 'input_example') {
+                // Input Modes
                 optionsContainer.classList.add('hidden');
                 inputContainer.classList.remove('hidden');
 
-                qBadge.innerText = "記述（キーボード入力）";
-                qWord.innerText = q.target.meaning;
-                qSub.innerText = "にあてはまる古文単語を入力してください（ひらがな可）";
+                if (q.type === 'input') {
+                    qBadge.innerText = "記述（意味 ➔ 単語）";
+                    qWord.innerText = q.target.meaning;
+                    qSub.innerText = "にあてはまる古文単語を入力してください（ひらがな可）";
+                } else if (q.type === 'input_example') {
+                    qBadge.innerText = "記述（例文穴埋め）";
+                    const maskedSentence = maskExampleSentence(q.target.example, q.target.word);
+                    qWord.innerHTML = `<span class="text-indigo-900 leading-relaxed font-serif-jp">「${maskedSentence}」</span>`;
+                    qSub.innerText = "（　　）に入る適切な古文単語を入力してください（ひらがな可）";
+                }
 
                 const inputEl = document.getElementById('quizTextInput');
                 inputEl.value = '';
