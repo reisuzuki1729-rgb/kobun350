@@ -191,7 +191,7 @@
                     <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold text-slate-800">4択クイズテスト</h2>
+                    <h2 class="text-xl font-bold text-slate-800">テストモード選択</h2>
                     <p class="text-xs text-slate-500 mt-1">No.51〜100からランダムに出題されます</p>
                 </div>
 
@@ -200,15 +200,19 @@
                     <div class="grid grid-cols-1 gap-2.5">
                         <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
                             <input type="radio" name="quizType" value="k2m" checked class="text-indigo-600">
-                            <span class="text-xs font-medium">基本：古文 ➔ 現代語訳</span>
+                            <span class="text-xs font-medium">基本：4択（古文 ➔ 現代語訳）</span>
                         </label>
                         <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
                             <input type="radio" name="quizType" value="m2k" class="text-indigo-600">
-                            <span class="text-xs font-medium">逆引き：現代語訳 ➔ 古文</span>
+                            <span class="text-xs font-medium">逆引き：4択（現代語訳 ➔ 古文）</span>
                         </label>
                         <label class="border border-amber-300 bg-amber-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-amber-100/50">
                             <input type="radio" name="quizType" value="example" class="text-indigo-600">
-                            <span class="text-xs font-bold text-amber-900">✨ 例文（穴埋め）➔ 古文単語</span>
+                            <span class="text-xs font-bold text-amber-900">✨ 4択：例文（穴埋め）➔ 古文単語</span>
+                        </label>
+                        <label class="border border-indigo-300 bg-indigo-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-indigo-100/50">
+                            <input type="radio" name="quizType" value="input" class="text-indigo-600">
+                            <span class="text-xs font-bold text-indigo-900">✍️ 記述（キーボード入力）：意味 ➔ 古文単語入力</span>
                         </label>
                     </div>
 
@@ -239,9 +243,22 @@
                     <p id="quiz-question-sub" class="text-xs text-slate-500">この意味として最も適切なものを選んでください</p>
                 </div>
 
-                <!-- Choices -->
+                <!-- Choices (4択用) -->
                 <div id="quiz-options" class="grid grid-cols-1 gap-3">
                     <!-- Dynamic choices will be injected here -->
+                </div>
+
+                <!-- Input Field (記述入力用) -->
+                <div id="quiz-input-container" class="hidden bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex gap-2">
+                        <input type="text" id="quizTextInput" placeholder="古文単語（ひらがな可）を入力..." class="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-indigo-500 outline-none font-medium">
+                        <button id="quizInputSubmitBtn" onclick="submitInputAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-sm">
+                            判定
+                        </button>
+                    </div>
+                    <p class="text-[11px] text-slate-400 flex items-center gap-1">
+                        <i class="fa-solid fa-keyboard"></i> Enterキーを押しても解答判定できます
+                    </p>
                 </div>
 
                 <!-- Explanation Box (Shown after selection) -->
@@ -250,9 +267,10 @@
                         <span id="quiz-result-badge" class="font-bold text-sm px-2 py-0.5 rounded">正解</span>
                         <span id="quiz-correct-answer" class="text-xs font-medium text-slate-300">正解：...</span>
                     </div>
+                    <div id="quiz-user-input-display" class="hidden text-xs text-amber-300 font-mono">あなたの回答: ---</div>
                     <div id="quiz-detail-text" class="text-xs text-slate-300 whitespace-pre-line leading-relaxed">解説...</div>
-                    <button onclick="nextQuizQuestion()" class="w-full mt-2 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-2 rounded-lg transition">
-                        次の問題へ
+                    <button id="nextQuizBtn" onclick="nextQuizQuestion()" class="w-full mt-2 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-2 rounded-lg transition">
+                        次の問題へ (Enter)
                     </button>
                 </div>
             </div>
@@ -424,7 +442,7 @@
             { id: 52, word: "あさまし", reading: "あさまし", meaning: "①驚いたことだ ②あきれたことだ・情けない", origin: "語源は「あさむ（驚く）」。口をアングリ開けてしまうような意外な驚き・呆れ。", example: "かかる人の、撰集承りておはするは、あさましきことかな。", learned: false },
             { id: 53, word: "いとほし", reading: "いとほし", meaning: "①気の毒だ・かわいそうだ ②かわいい", origin: "他人に同情して気の毒がる。または愛おしく可愛い様子。", example: "身に打せむこといとほしくおぼえ頂ければ、え打たせで置きつ。", learned: false },
             { id: 54, word: "ゆかし", reading: "ゆかし", meaning: "①行きたい・見たい・聞きたい・知りたい ②心ひかれる", origin: "「行きたい」が語源。知りたい・見たいと心が強く惹かれる様子。", example: "いかなる人の、かく弾き奏づるならむと、わりなくゆかしけれど...", learned: false },
-            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている ②身分が高い・教養がある", origin: "絶対的評価を表す語で最高。「よい」や身分・教養ฝ的高さを表す。", example: "中ごろは、よき人々、市に行きてなむ買ひ給ひける。", learned: false },
+            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている ②身分が高い・教養がある", origin: "絶対的評価を表す語で最高。「よい」や身分・教養の高さを表す。", example: "中ごろは、よき人々、市に行きてなむ買ひ給ひける。", learned: false },
             { id: 56, word: "よろし", reading: "よろし", meaning: "①悪くない ②普通だ・ありふれている", origin: "相対的評価を表す語。「悪くはない」「まあまあだ」。", example: "春ごとに咲くとて、桜をよろしう思ふ人やはある。", learned: false },
             { id: 57, word: "わろし", reading: "わろし", meaning: "①相対的に悪い・よくない", origin: "相対的評価を表す語で「よくない」。", example: "九月ばかりのころ、このころ鳥のあぢはひ、わろし。", learned: false },
             { id: 58, word: "あし", reading: "あし", meaning: "①絶対的に悪い", origin: "絶対的評価を表す語で最低。「あしき（悪い）」の対義語は「よし」。", example: "わが子をしも、かく情けなく罷むは、いとあしきことなり。", learned: false },
@@ -438,7 +456,7 @@
             { id: 66, word: "いたづらなり", reading: "いたずらなり", meaning: "①無駄だ・無益だ ②ひまだ", origin: "「いたづら（徒ら）」＝何の効果もなく無駄なこと。「むなしい」。", example: "この庭のいたづらに広きこと、あさましく、あるべからぬことなり。", learned: false },
             { id: 67, word: "せちなり", reading: "せちなり", meaning: "①切実だ ②大切だ", origin: "「切に」の形でも多用される。感情が痛切にこみ上げる様・ひたすらな様。", example: "七月十五日の月に押し出て、せちに物思へる気色なり。", learned: false },
             { id: 68, word: "あながちなり", reading: "あながちなり", meaning: "①強引だ ②筋が通らない・身勝手だ ③【下に打ち消しで】必ずしも（〜ない）", origin: "漢字「強」から「強引・強硬・無茶苦茶」のイメージ。", example: "桜の散るを、あながちに怨み奉るべきにもあらざれど...", learned: false },
-            { id: 69, word: "みそかなり", reading: "みそかなり", meaning: "①【人目を忍んで】ひそかに・こっそり", origin: "「みそか」は密か。人目を忍んでひそかに行動する様子。", example: "親しき人のもとへ行き通ひけるほどに、奴を思ひかけて、みそかに通ひにけり。", learned: false },
+            { id: 69, word: "みそかに", reading: "みそかに", meaning: "①【人目を忍んで】ひそかに・こっそり", origin: "「みそか」は密か。人目を忍んでひそかに行動する様子。", example: "親しき人のもとへ行き通ひけるほどに、奴を思ひかけて、みそかに通ひにけり。", learned: false },
             { id: 70, word: "つれづれなり", reading: "つれづれなり", meaning: "①退屈だ・手持ちぶさだが ②物寂しい", origin: "「連れ＋連れ」。やるべき事がなく退屈でつくづく寂しい状態。", example: "雨いたう降りてつれづれなりとて、殿上人、上の御局にて碁打ちあそび給ふ。", learned: false },
             { id: 71, word: "かげ", reading: "かげ", meaning: "①光 ②姿・面影 ③影", origin: "「光」を表すのが最重要（月のかげ・日のかげなど）。", example: "板閣より漏り来る月の影のみぞ、実に変らぬ昔の光なりける。", learned: false },
             { id: 72, word: "つとめて", reading: "つとめて", meaning: "①早朝 ②翌朝", origin: "「つと」は早いという意味。「翌朝」または「早朝」の意。", example: "十五日のつとめては、深草の法華堂にお参りしたるに...", learned: false },
@@ -473,9 +491,9 @@
         ];
 
         const DEFAULT_NEWS = [
-            { id: 1, date: "2026/10/25", title: "🎉 お知らせページを追加！", content: "「お知らせ・アップデート情報」ページを追加しました！新機能やアップデート情報をここからチェックできるようになりました！ぜひご活用ください！" },
-            { id: 2, date: "2026/10/25", title: "✨ 例文穴埋めクイズを追加！", content: "4択クイズに「例文穴埋めモード」を追加しました！文脈から適切な古文単語を推理する実戦力を磨きましょう！" },
-            { id: 3, date: "2026/10/25", title: "🎉 アプリがオープンしました！", content: "解法古文単語350（No.51〜100）の暗記アプリが完成しました！カードでの暗記やクイズでどんどん学習を進めましょう！" }
+            { id: 1, date: "2026/10/25", title: "✍️ 記述（キーボード入力）テストを追加！", content: "クイズモードに「記述（キーボード入力）」を追加しました！現代語訳から古文単語を直接キーボードで打ち込んで解答する実戦モードです！" },
+            { id: 2, date: "2026/10/25", title: "🎉 お知らせページを追加！", content: "「お知らせ・アップデート情報」ページを追加しました！新機能やアップデート情報をここからチェックできるようになりました！ぜひご活用ください！" },
+            { id: 3, date: "2026/10/25", title: "✨ 例文穴埋めクイズを追加！", content: "4択クイズに「例文穴埋めモード」を追加しました！文脈から適切な古文単語を推理する実戦力を磨きましょう！" }
         ];
 
         // State Management
@@ -499,6 +517,18 @@
             renderTable();
             renderNews();
             updateDashboard();
+
+            // Setup Event Listener for Input Mode Enter Key
+            document.getElementById('quizTextInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const expBox = document.getElementById('quiz-explanation');
+                    if (expBox.classList.contains('hidden')) {
+                        submitInputAnswer();
+                    } else {
+                        nextQuizQuestion();
+                    }
+                }
+            });
         };
 
         function showMessage(msg) {
@@ -603,7 +633,7 @@
 
         function openNewsAdminModal() {
             const pwd = prompt("管理者パスワードを入力してください");
-            if (pwd === "6174") {
+            if (pwd === "1234") {
                 document.getElementById('newsModalTitle').innerText = "お知らせの新規投稿";
                 document.getElementById('editingNewsId').value = "";
                 document.getElementById('newsTitleInput').value = "";
@@ -619,7 +649,7 @@
             if (!item) return;
 
             const pwd = prompt("編集用の管理者パスワードを入力してください");
-            if (pwd === "6174") {
+            if (pwd === "1234") {
                 document.getElementById('newsModalTitle').innerText = "お知らせの編集";
                 document.getElementById('editingNewsId').value = item.id;
                 document.getElementById('newsTitleInput').value = item.title;
@@ -648,7 +678,6 @@
             }
 
             if (editingId) {
-                // Edit existing post
                 const idx = newsList.findIndex(n => n.id == editingId);
                 if (idx !== -1) {
                     newsList[idx].title = title;
@@ -657,7 +686,6 @@
                     showMessage('お知らせを更新しました！');
                 }
             } else {
-                // Add new post
                 const now = new Date();
                 const dateStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
 
@@ -678,7 +706,7 @@
 
         function deleteNewsItem(id) {
             const pwd = prompt("削除用のパスワードを入力してください");
-            if (pwd === "6174") {
+            if (pwd === "1234") {
                 newsList = newsList.filter(n => n.id !== id);
                 saveNewsData();
                 showMessage('お知らせを削除しました');
@@ -732,7 +760,6 @@
 
             cardCounter.innerText = `カード ${currentCardIndex + 1} / ${filteredIndices.length}`;
 
-            // Learned button status
             const markBtn = document.getElementById('markBtn');
             if (item.learned) {
                 markBtn.className = "px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition active:scale-95 bg-emerald-100 text-emerald-800 border border-emerald-300";
@@ -796,7 +823,7 @@
             }
         }
 
-        // Helper to mask word in sentence for Fill-in-the-blank quiz (Only in Quiz mode)
+        // Helper to mask word in sentence for Fill-in-the-blank quiz
         function maskExampleSentence(sentence, targetWord) {
             if (!sentence) return "【 （　　） 】";
             let masked = sentence;
@@ -854,51 +881,114 @@
             document.getElementById('quiz-progress-text').innerText = `問題 ${quizCurrentIdx + 1} / ${quizQuestions.length}`;
             document.getElementById('quiz-score-text').innerText = `正解: ${quizScore}`;
             document.getElementById('quiz-explanation').classList.add('hidden');
+            document.getElementById('quiz-user-input-display').classList.add('hidden');
 
             const qWord = document.getElementById('quiz-question-word');
             const qSub = document.getElementById('quiz-question-sub');
             const qBadge = document.getElementById('quiz-badge');
 
-            if (q.type === 'k2m') {
-                qBadge.innerText = "古文 ➔ 現代語訳";
-                qWord.innerText = q.target.word;
-                qSub.innerText = `（${q.target.reading}）の現代語訳として最も適切なものは？`;
-            } else if (q.type === 'm2k') {
-                qBadge.innerText = "現代語訳 ➔ 古文";
-                qWord.innerText = q.target.meaning;
-                qSub.innerText = `にあてはまる古文単語は？`;
-            } else if (q.type === 'example') {
-                qBadge.innerText = "例文穴埋めクイズ";
-                const maskedSentence = maskExampleSentence(q.target.example, q.target.word);
-                qWord.innerHTML = `<span class="text-indigo-900 leading-relaxed font-serif-jp">「${maskedSentence}」</span>`;
-                qSub.innerText = `（　　）に入る適切な古文単語を選んでください`;
-            }
-
             const optionsContainer = document.getElementById('quiz-options');
-            optionsContainer.innerHTML = '';
+            const inputContainer = document.getElementById('quiz-input-container');
 
-            q.choices.forEach((choice) => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left bg-white border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 p-4 rounded-xl font-medium text-slate-800 transition flex items-center justify-between group shadow-sm";
-                
-                let labelText = "";
+            if (q.type === 'input') {
+                // Input Mode
+                optionsContainer.classList.add('hidden');
+                inputContainer.classList.remove('hidden');
+
+                qBadge.innerText = "記述（キーボード入力）";
+                qWord.innerText = q.target.meaning;
+                qSub.innerText = "にあてはまる古文単語を入力してください（ひらがな可）";
+
+                const inputEl = document.getElementById('quizTextInput');
+                inputEl.value = '';
+                inputEl.disabled = false;
+                document.getElementById('quizInputSubmitBtn').disabled = false;
+
+                setTimeout(() => inputEl.focus(), 100);
+
+            } else {
+                // Multiple Choice Modes
+                optionsContainer.classList.remove('hidden');
+                inputContainer.classList.add('hidden');
+
                 if (q.type === 'k2m') {
-                    labelText = choice.meaning;
-                } else {
-                    labelText = `${choice.word}（${choice.reading}）`;
+                    qBadge.innerText = "古文 ➔ 現代語訳";
+                    qWord.innerText = q.target.word;
+                    qSub.innerText = `（${q.target.reading}）の現代語訳として最も適切なものは？`;
+                } else if (q.type === 'm2k') {
+                    qBadge.innerText = "現代語訳 ➔ 古文";
+                    qWord.innerText = q.target.meaning;
+                    qSub.innerText = `にあてはまる古文単語は？`;
+                } else if (q.type === 'example') {
+                    qBadge.innerText = "例文穴埋めクイズ";
+                    const maskedSentence = maskExampleSentence(q.target.example, q.target.word);
+                    qWord.innerHTML = `<span class="text-indigo-900 leading-relaxed font-serif-jp">「${maskedSentence}」</span>`;
+                    qSub.innerText = `（　　）に入る適切な古文単語を選んでください`;
                 }
 
-                btn.innerHTML = `<span>${labelText}</span><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500 text-xs"></i>`;
-                
-                btn.onclick = () => selectQuizAnswer(choice, q.target);
-                optionsContainer.appendChild(btn);
-            });
+                optionsContainer.innerHTML = '';
+                q.choices.forEach((choice) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left bg-white border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 p-4 rounded-xl font-medium text-slate-800 transition flex items-center justify-between group shadow-sm";
+                    
+                    let labelText = q.type === 'k2m' ? choice.meaning : `${choice.word}（${choice.reading}）`;
+
+                    btn.innerHTML = `<span>${labelText}</span><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500 text-xs"></i>`;
+                    btn.onclick = () => selectQuizAnswer(choice, q.target);
+                    optionsContainer.appendChild(btn);
+                });
+            }
         }
 
+        // Selection answer for 4択
         function selectQuizAnswer(selected, correct) {
             const isCorrect = selected.id === correct.id;
             if (isCorrect) quizScore++;
 
+            showQuizExplanation(isCorrect, correct);
+
+            const buttons = document.querySelectorAll('#quiz-options button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+        }
+
+        // Input answer submission for 記述入力
+        function submitInputAnswer() {
+            const q = quizQuestions[quizCurrentIdx];
+            const correct = q.target;
+            const inputEl = document.getElementById('quizTextInput');
+            const userText = inputEl.value.trim().toLowerCase();
+
+            if (!userText) {
+                showMessage("回答を入力してください");
+                return;
+            }
+
+            // Normalization & Answer Checking
+            const normalizedWord = correct.word.toLowerCase();
+            const normalizedReading = correct.reading.toLowerCase();
+            
+            let validAnswers = [normalizedWord, normalizedReading];
+            if (correct.word.includes('・')) {
+                correct.word.split('・').forEach(part => validAnswers.push(part.trim().toLowerCase()));
+            }
+
+            const isCorrect = validAnswers.some(ans => ans === userText || userText.includes(ans) || ans.includes(userText));
+            if (isCorrect) quizScore++;
+
+            inputEl.disabled = true;
+            document.getElementById('quizInputSubmitBtn').disabled = true;
+
+            const inputDisplay = document.getElementById('quiz-user-input-display');
+            inputDisplay.innerText = `あなたの回答: 「${inputEl.value.trim()}」`;
+            inputDisplay.classList.remove('hidden');
+
+            showQuizExplanation(isCorrect, correct);
+        }
+
+        function showQuizExplanation(isCorrect, correct) {
             const expBox = document.getElementById('quiz-explanation');
             const badge = document.getElementById('quiz-result-badge');
             const correctText = document.getElementById('quiz-correct-answer');
@@ -923,13 +1013,12 @@
             }
             detailText.innerText = explanationContent;
 
-            const buttons = document.querySelectorAll('#quiz-options button');
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
-            });
-
             expBox.classList.remove('hidden');
+
+            // Focus on next button
+            setTimeout(() => {
+                document.getElementById('nextQuizBtn').focus();
+            }, 100);
         }
 
         function nextQuizQuestion() {
