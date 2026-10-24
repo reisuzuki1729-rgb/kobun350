@@ -188,14 +188,18 @@
 
                 <div class="space-y-3 text-left">
                     <label class="block text-xs font-bold text-slate-600">出題形式</label>
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 gap-2.5">
                         <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
                             <input type="radio" name="quizType" value="k2m" checked class="text-indigo-600">
-                            <span class="text-xs font-medium">古文 ➔ 現代語訳</span>
+                            <span class="text-xs font-medium">基本：古文 ➔ 現代語訳</span>
                         </label>
                         <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
                             <input type="radio" name="quizType" value="m2k" class="text-indigo-600">
-                            <span class="text-xs font-medium">現代語訳 ➔ 古文</span>
+                            <span class="text-xs font-medium">逆引き：現代語訳 ➔ 古文</span>
+                        </label>
+                        <label class="border border-amber-300 bg-amber-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-amber-100/50">
+                            <input type="radio" name="quizType" value="example" class="text-indigo-600">
+                            <span class="text-xs font-bold text-amber-900">✨ 新登場：例文（穴埋め）➔ 古文単語</span>
                         </label>
                     </div>
 
@@ -221,8 +225,8 @@
 
                 <!-- Question Card -->
                 <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 text-center space-y-3">
-                    <span class="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-full">問題</span>
-                    <h3 id="quiz-question-word" class="font-serif-jp text-3xl font-bold text-slate-800 pt-2">---</h3>
+                    <span id="quiz-badge" class="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-full">問題</span>
+                    <h3 id="quiz-question-word" class="font-serif-jp text-2xl md:text-3xl font-bold text-slate-800 pt-2 leading-relaxed">---</h3>
                     <p id="quiz-question-sub" class="text-xs text-slate-500">この意味として最も適切なものを選んでください</p>
                 </div>
 
@@ -598,6 +602,35 @@
             }
         }
 
+        // Helper to mask word in sentence for Fill-in-the-blank quiz
+        function maskExampleSentence(sentence, targetWord) {
+            if (!sentence) return "【 (　　) 】";
+            // Replace exact word or base parts if possible
+            let masked = sentence;
+            if (targetWord.includes('・')) {
+                const parts = targetWord.split('・');
+                parts.forEach(p => {
+                    if (p && p.length > 0) {
+                        masked = masked.replace(new RegExp(p, 'g'), '（　　）');
+                    }
+                });
+            } else {
+                masked = masked.replace(new RegExp(targetWord, 'g'), '（　　）');
+            }
+
+            // Fallback if no replacement was triggered (e.g. inflected forms)
+            if (masked === sentence) {
+                // If the word has kanji or base form, attempt simple masking or wrap first part
+                const core = targetWord.slice(0, 2);
+                if (sentence.includes(core)) {
+                    masked = sentence.replace(new RegExp(core + '[ぁ-ん]*', 'g'), '（　　）');
+                } else {
+                    masked = sentence + ' ➔ （　　）';
+                }
+            }
+            return masked;
+        }
+
         // Quiz Logic
         function startQuiz() {
             const type = document.querySelector('input[name="quizType"]:checked').value;
@@ -635,13 +668,22 @@
 
             const qWord = document.getElementById('quiz-question-word');
             const qSub = document.getElementById('quiz-question-sub');
+            const qBadge = document.getElementById('quiz-badge');
 
             if (q.type === 'k2m') {
+                qBadge.innerText = "古文 ➔ 現代語訳";
                 qWord.innerText = q.target.word;
                 qSub.innerText = `（${q.target.reading}）の現代語訳として最も適切なものは？`;
-            } else {
+            } else if (q.type === 'm2k') {
+                qBadge.innerText = "現代語訳 ➔ 古文";
                 qWord.innerText = q.target.meaning;
                 qSub.innerText = `にあてはまる古文単語は？`;
+            } else if (q.type === 'example') {
+                qBadge.innerText = "例文穴埋めクイズ";
+                const maskedSentence = maskExampleSentence(q.target.example, q.target.word);
+                // 問題文には例文のみ表示（訳は回答後の解説で表示）
+                qWord.innerHTML = `<span class="text-indigo-900 leading-relaxed font-serif-jp">「${maskedSentence}」</span>`;
+                qSub.innerText = `（　　）に入る適切な古文単語を選んでください`;
             }
 
             const optionsContainer = document.getElementById('quiz-options');
@@ -651,7 +693,13 @@
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left bg-white border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 p-4 rounded-xl font-medium text-slate-800 transition flex items-center justify-between group shadow-sm";
                 
-                const labelText = q.type === 'k2m' ? choice.meaning : `${choice.word}（${choice.reading}）`;
+                let labelText = "";
+                if (q.type === 'k2m') {
+                    labelText = choice.meaning;
+                } else {
+                    labelText = `${choice.word}（${choice.reading}）`;
+                }
+
                 btn.innerHTML = `<span>${labelText}</span><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500 text-xs"></i>`;
                 
                 btn.onclick = () => selectQuizAnswer(choice, q.target);
@@ -677,7 +725,16 @@
             }
 
             correctText.innerText = `正解：${correct.word}（${correct.reading}） ➔ ${correct.meaning}`;
-            detailText.innerText = correct.origin ? `💡 解法ヒント: ${correct.origin}` : '';
+            
+            // 判定時に現代語訳・ヒント・例文をまとめて表示
+            let explanationContent = `📖 現代語訳: ${correct.meaning}\n`;
+            if (correct.origin) {
+                explanationContent += `💡 解法ヒント: ${correct.origin}\n`;
+            }
+            if (correct.example) {
+                explanationContent += `🌸 原文: 「${correct.example}」`;
+            }
+            detailText.innerText = explanationContent;
 
             const buttons = document.querySelectorAll('#quiz-options button');
             buttons.forEach(btn => {
