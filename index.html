@@ -590,8 +590,8 @@
         }
 
         function openNewsAdminModal() {
-            const pwd = prompt("管理者パスワードを入力してください (初期設定: 1234)");
-            if (pwd === "1234") {
+            const pwd = prompt("管理者パスワードを入力してください");
+            if (pwd === "6174") {
                 document.getElementById('newsAdminModal').classList.remove('hidden');
             } else if (pwd !== null) {
                 alert("パスワードが違います");
@@ -630,7 +630,7 @@
         }
 
         function deleteNewsItem(id) {
-            const pwd = prompt("削除用のパスワードを入力してください (1234)");
+            const pwd = prompt("削除用のパスワードを入力してください");
             if (pwd === "1234") {
                 newsList = newsList.filter(n => n.id !== id);
                 saveNewsData();
