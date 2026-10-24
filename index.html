@@ -48,7 +48,7 @@
         }
     </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+<body class="text-slate-800 min-h-screen flex flex-col justify-between select-none">
 
     <!-- Header Navigation -->
     <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
@@ -65,17 +65,21 @@
         </div>
         
         <!-- Navigation Tabs -->
-        <div class="max-w-4xl mx-auto px-2 flex justify-around border-t border-indigo-800/60 text-sm">
-            <button onclick="switchTab('flashcard')" id="tab-flashcard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-2 border-b-2 border-amber-400 text-amber-400">
+        <div class="max-w-4xl mx-auto px-2 flex justify-around border-t border-indigo-800/60 text-xs md:text-sm overflow-x-auto">
+            <button onclick="switchTab('flashcard')" id="tab-flashcard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-amber-400 text-amber-400 whitespace-nowrap">
                 <i class="fa-solid fa-clone"></i> カード
             </button>
-            <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-2 border-b-2 border-transparent text-indigo-200 hover:text-white">
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
                 <i class="fa-solid fa-circle-question"></i> クイズ
             </button>
-            <button onclick="switchTab('list')" id="tab-list" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-2 border-b-2 border-transparent text-indigo-200 hover:text-white">
-                <i class="fa-solid fa-list-check"></i> 単語一覧
+            <button onclick="switchTab('news')" id="tab-news" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap relative">
+                <i class="fa-solid fa-bullhorn"></i> お知らせ
+                <span id="news-badge" class="hidden absolute top-2 right-1 w-2 h-2 bg-amber-400 rounded-full"></span>
             </button>
-            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-2 border-b-2 border-transparent text-indigo-200 hover:text-white">
+            <button onclick="switchTab('list')" id="tab-list" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+                <i class="fa-solid fa-list-check"></i> 一覧
+            </button>
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
                 <i class="fa-solid fa-chart-pie"></i> 学習状況
             </button>
         </div>
@@ -163,7 +167,7 @@
                 </button>
 
                 <div class="flex gap-2">
-                    <button id="markBtn" onclick="toggleLearnedCurrent()" class="px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition active:scale-95 bg-slate-100 text-slate-700 hover:bg-slate-200">
+                    <button id="markBtn" onclick="toggleLearnedCurrent()" class="px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition active:scale-95 bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300">
                         <i class="fa-regular fa-circle"></i> 未習得
                     </button>
                 </div>
@@ -199,7 +203,7 @@
                         </label>
                         <label class="border border-amber-300 bg-amber-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-amber-100/50">
                             <input type="radio" name="quizType" value="example" class="text-indigo-600">
-                            <span class="text-xs font-bold text-amber-900">✨ 新登場：例文（穴埋め）➔ 古文単語</span>
+                            <span class="text-xs font-bold text-amber-900">✨ 例文（穴埋め）➔ 古文単語</span>
                         </label>
                     </div>
 
@@ -241,7 +245,7 @@
                         <span id="quiz-result-badge" class="font-bold text-sm px-2 py-0.5 rounded">正解</span>
                         <span id="quiz-correct-answer" class="text-xs font-medium text-slate-300">正解：...</span>
                     </div>
-                    <p id="quiz-detail-text" class="text-xs text-slate-300">解説...</p>
+                    <div id="quiz-detail-text" class="text-xs text-slate-300 whitespace-pre-line leading-relaxed">解説...</div>
                     <button onclick="nextQuizQuestion()" class="w-full mt-2 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-2 rounded-lg transition">
                         次の問題へ
                     </button>
@@ -264,6 +268,23 @@
                 <button onclick="resetQuizView()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition">
                     もう一度挑戦する
                 </button>
+            </div>
+        </section>
+
+        <!-- ================= NEWS / UPDATES MODE ================= -->
+        <section id="sec-news" class="hidden space-y-4 max-w-2xl mx-auto">
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div>
+                    <h2 class="font-bold text-slate-800 text-base">お知らせ・アップデート情報</h2>
+                    <p class="text-xs text-slate-500">アプリの新機能や更新情報をお知らせします</p>
+                </div>
+                <button onclick="openNewsAdminModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-lg border border-slate-300 transition flex items-center gap-1">
+                    <i class="fa-solid fa-pen-to-square"></i> 投稿・管理
+                </button>
+            </div>
+
+            <div id="news-container" class="space-y-3">
+                <!-- Dynamic News List -->
             </div>
         </section>
 
@@ -361,6 +382,30 @@
 
     </main>
 
+    <!-- News Admin Modal -->
+    <div id="newsAdminModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
+            <div class="flex justify-between items-center border-b pb-3 border-slate-100">
+                <h3 class="font-bold text-slate-800">お知らせの新規投稿</h3>
+                <button onclick="closeNewsAdminModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">タイトル</label>
+                    <input type="text" id="newsTitleInput" placeholder="例：例文穴埋めクイズ機能を追加！" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">お知らせ本文</label>
+                    <textarea id="newsContentInput" rows="4" placeholder="アップデートの詳細やお知らせ内容を入力..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeNewsAdminModal()" class="w-1/2 bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl text-sm">キャンセル</button>
+                <button onclick="saveNewPost()" class="w-1/2 bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm shadow">投稿する</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
         解法古文単語350 (No.51 - 100) 完全対応暗記アプリ
@@ -368,13 +413,12 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Corrected Vocabulary Dataset (No.51 - No.100) completely mapped and verified
         const DEFAULT_VOCAB = [
             { id: 51, word: "つきづきし", reading: "つきづきし", meaning: "①似つかわしい・ふさわしい", origin: "「似つかわしい・しっくり合っている」意味。「ピッタリ！」と対象に合わせて訳す。", example: "霜のいと白きも、またさらでも、いと寒きに、火など急ぎおこして、炭持て渡るも、いとつきづきし。", learned: false },
             { id: 52, word: "あさまし", reading: "あさまし", meaning: "①驚いたことだ（主にマイナス） ②あきれたことだ・情けない", origin: "語源は「あさむ（驚く）」。口をアングリ開けてしまうような意外な驚き・呆れ。", example: "かかる人の、撰集承りておはするは、あさましきことかな。", learned: false },
             { id: 53, word: "いとほし", reading: "いとほし", meaning: "①気の毒だ・かわいそうだ ②かわいい", origin: "他人に同情して気の毒がる。または愛おしく可愛い様子。", example: "見に、打ぜんこといとほしくおぼえ頂ければ...", learned: false },
             { id: 54, word: "ゆかし", reading: "ゆかし", meaning: "①行きたい・見たい・聞きたい・知りたい ②心ひかれる", origin: "「行きたい」が語源。知りたい・見たいと心が強く惹かれる様子。", example: "いかなる人の、かく弾き奏づるならむ、と、わりなくゆかしけれど...", learned: false },
-            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている ②身分が高い・教養がある", origin: "絶対的評価を表す語で最高。「よい」や身分・教養の高さを表す。", example: "中ごろは、よき人々、市に行きてなむ色彩ふはい。", learned: false },
+            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている ②身分が高い・教養がある", origin: "絶対的評価を表す語で最高。「よい」や身分・教養的高さを表す。", example: "中ごろは、よき人々、市に行きてなむ色彩ふはい。", learned: false },
             { id: 56, word: "よろし", reading: "よろし", meaning: "①悪くない ②普通だ・ありふれている", origin: "相対的評価を表す語。「悪くはない」「まあまあだ」。", example: "春ごとに咲くとして、桜をよろしふ思ふ人はいかがたるうが...", learned: false },
             { id: 57, word: "わろし", reading: "わろし", meaning: "①相対的に悪い・よくない", origin: "相対的評価を表す語で「よくない」。", example: "九月ばかりの時節なので、このころ鳥の味わいが、わろし。", learned: false },
             { id: 58, word: "あし", reading: "あし", meaning: "①絶対的に悪い", origin: "絶対的評価を表す語で最低。「あしき（悪い）」の対義語は「よし」。", example: "わが子をしも、かく情けなく罷むは、いとあしきことなり。", learned: false },
@@ -422,8 +466,14 @@
             { id: 100, word: "さはる", reading: "さはる", meaning: "①【障る】差し支える・妨げられる", origin: "「障る」。進行や行動が障害によって邪魔される。名詞形は「さはり（障り・支障）」。", example: "いとわりなき雨にさはりて、参り給はず。", learned: false }
         ];
 
+        const DEFAULT_NEWS = [
+            { id: 1, date: "2026/10/25", title: "🎉 アプリがオープンしました！", content: "解法古文単語350（No.51〜100）の暗記アプリが完成しました！カードでの暗記やクイズでどんどん学習を進めましょう！" },
+            { id: 2, date: "2026/10/25", title: "✨ 例文穴埋めクイズを追加！", content: "4択クイズに「例文穴埋めモード」を追加しました！文脈から適切な古文単語を推理する実戦力を磨きましょう！" }
+        ];
+
         // State Management
         let vocabList = [];
+        let newsList = [];
         let currentCardIndex = 0;
         let filteredIndices = [];
         let isCardFlipped = false;
@@ -436,9 +486,11 @@
         // App Initialization
         window.onload = function() {
             loadVocabData();
+            loadNewsData();
             updateFilteredCards();
             renderFlashcard();
             renderTable();
+            renderNews();
             updateDashboard();
         };
 
@@ -455,10 +507,10 @@
                 try {
                     vocabList = JSON.parse(saved);
                 } catch(e) {
-                    vocabList = [...DEFAULT_VOCAB];
+                    vocabList = JSON.parse(JSON.stringify(DEFAULT_VOCAB));
                 }
             } else {
-                vocabList = [...DEFAULT_VOCAB];
+                vocabList = JSON.parse(JSON.stringify(DEFAULT_VOCAB));
             }
         }
 
@@ -467,17 +519,35 @@
             updateDashboard();
         }
 
+        function loadNewsData() {
+            const saved = localStorage.getItem('kobun_news_data');
+            if (saved) {
+                try {
+                    newsList = JSON.parse(saved);
+                } catch(e) {
+                    newsList = JSON.parse(JSON.stringify(DEFAULT_NEWS));
+                }
+            } else {
+                newsList = JSON.parse(JSON.stringify(DEFAULT_NEWS));
+            }
+        }
+
+        function saveNewsData() {
+            localStorage.setItem('kobun_news_data', JSON.stringify(newsList));
+            renderNews();
+        }
+
         document.getElementById('resetDataBtn').addEventListener('click', () => {
             vocabList = JSON.parse(JSON.stringify(DEFAULT_VOCAB));
             saveVocabData();
             filterCards();
             renderTable();
-            showMessage('単語データを最新の番号対応表にリセットしました');
+            showMessage('単語データを初期化しました');
         });
 
         // Navigation Tab Switch
         function switchTab(tabName) {
-            ['flashcard', 'quiz', 'list', 'dashboard'].forEach(t => {
+            ['flashcard', 'quiz', 'news', 'list', 'dashboard'].forEach(t => {
                 document.getElementById(`sec-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`tab-${t}`);
                 btn.classList.remove('border-amber-400', 'text-amber-400');
@@ -491,6 +561,83 @@
 
             if (tabName === 'dashboard') updateDashboard();
             if (tabName === 'list') renderTable();
+            if (tabName === 'news') renderNews();
+        }
+
+        // News Logic & Render
+        function renderNews() {
+            const container = document.getElementById('news-container');
+            container.innerHTML = '';
+
+            if (newsList.length === 0) {
+                container.innerHTML = `<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-xs text-slate-400">現在お知らせはありません</div>`;
+                return;
+            }
+
+            newsList.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-2 relative";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full">${item.date}</span>
+                        <button onclick="deleteNewsItem(${item.id})" class="text-slate-300 hover:text-rose-500 text-xs px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base">${item.title}</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed whitespace-pre-line">${item.content}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openNewsAdminModal() {
+            const pwd = prompt("管理者パスワードを入力してください (初期設定: 1234)");
+            if (pwd === "1234") {
+                document.getElementById('newsAdminModal').classList.remove('hidden');
+            } else if (pwd !== null) {
+                alert("パスワードが違います");
+            }
+        }
+
+        function closeNewsAdminModal() {
+            document.getElementById('newsAdminModal').classList.add('hidden');
+            document.getElementById('newsTitleInput').value = '';
+            document.getElementById('newsContentInput').value = '';
+        }
+
+        function saveNewPost() {
+            const title = document.getElementById('newsTitleInput').value.trim();
+            const content = document.getElementById('newsContentInput').value.trim();
+
+            if (!title || !content) {
+                alert("タイトルと本文の両方を入力してください");
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
+
+            const newItem = {
+                id: Date.now(),
+                date: dateStr,
+                title: title,
+                content: content
+            };
+
+            newsList.unshift(newItem);
+            saveNewsData();
+            closeNewsAdminModal();
+            showMessage('お知らせを更新・追加しました！');
+        }
+
+        function deleteNewsItem(id) {
+            const pwd = prompt("削除用のパスワードを入力してください (1234)");
+            if (pwd === "1234") {
+                newsList = newsList.filter(n => n.id !== id);
+                saveNewsData();
+                showMessage('お知らせを削除しました');
+            } else if (pwd !== null) {
+                alert("パスワードが違います");
+            }
         }
 
         // Flashcard Filtering & Rendering
@@ -604,8 +751,7 @@
 
         // Helper to mask word in sentence for Fill-in-the-blank quiz
         function maskExampleSentence(sentence, targetWord) {
-            if (!sentence) return "【 (　　) 】";
-            // Replace exact word or base parts if possible
+            if (!sentence) return "【 （　　） 】";
             let masked = sentence;
             if (targetWord.includes('・')) {
                 const parts = targetWord.split('・');
@@ -618,9 +764,7 @@
                 masked = masked.replace(new RegExp(targetWord, 'g'), '（　　）');
             }
 
-            // Fallback if no replacement was triggered (e.g. inflected forms)
             if (masked === sentence) {
-                // If the word has kanji or base form, attempt simple masking or wrap first part
                 const core = targetWord.slice(0, 2);
                 if (sentence.includes(core)) {
                     masked = sentence.replace(new RegExp(core + '[ぁ-ん]*', 'g'), '（　　）');
@@ -681,7 +825,6 @@
             } else if (q.type === 'example') {
                 qBadge.innerText = "例文穴埋めクイズ";
                 const maskedSentence = maskExampleSentence(q.target.example, q.target.word);
-                // 問題文には例文のみ表示（訳は回答後の解説で表示）
                 qWord.innerHTML = `<span class="text-indigo-900 leading-relaxed font-serif-jp">「${maskedSentence}」</span>`;
                 qSub.innerText = `（　　）に入る適切な古文単語を選んでください`;
             }
@@ -726,7 +869,6 @@
 
             correctText.innerText = `正解：${correct.word}（${correct.reading}） ➔ ${correct.meaning}`;
             
-            // 判定時に現代語訳・ヒント・例文をまとめて表示
             let explanationContent = `📖 現代語訳: ${correct.meaning}\n`;
             if (correct.origin) {
                 explanationContent += `💡 解法ヒント: ${correct.origin}\n`;
