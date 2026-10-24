@@ -52,16 +52,22 @@
 
     <!-- Header Navigation -->
     <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="bg-amber-500 text-indigo-950 font-bold px-2.5 py-1 rounded-lg text-sm tracking-wider">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center gap-2">
+            <div class="flex items-center space-x-2 md:space-x-3">
+                <div class="bg-amber-500 text-indigo-950 font-bold px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg text-xs md:text-sm tracking-wider">
                     古文単語
                 </div>
-                <h1 class="font-serif-jp text-lg md:text-xl font-bold tracking-wide">解法古文単語350 <span class="text-amber-400 text-sm md:text-base font-sans font-normal">(No.51-100)</span></h1>
+                <h1 class="font-serif-jp text-base md:text-xl font-bold tracking-wide">解法古文単語350 <span class="text-amber-400 text-xs md:text-base font-sans font-normal">(No.51-100)</span></h1>
             </div>
-            <button id="resetDataBtn" title="データを初期化" class="text-indigo-200 hover:text-white text-xs md:text-sm flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 px-3 py-1.5 rounded-lg transition">
-                <i class="fa-solid fa-rotate-right"></i> リセット
-            </button>
+            <div class="flex items-center gap-2">
+                <!-- Google Form Link Button -->
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeiZLt42dCTjR3RUInUL95jNxXLjS8tK35az3YehxII0nlhqw/viewform" target="_blank" rel="noopener noreferrer" class="text-amber-300 hover:text-white text-xs md:text-sm flex items-center gap-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 px-2.5 py-1.5 rounded-lg transition whitespace-nowrap">
+                    <i class="fa-solid fa-paper-plane"></i> <span class="hidden sm:inline">ご意見・ご質問</span><span class="sm:hidden">質問</span>
+                </a>
+                <button id="resetDataBtn" title="データを初期化" class="text-indigo-200 hover:text-white text-xs md:text-sm flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 px-2.5 py-1.5 rounded-lg transition">
+                    <i class="fa-solid fa-rotate-right"></i> リセット
+                </button>
+            </div>
         </div>
         
         <!-- Navigation Tabs -->
@@ -72,9 +78,8 @@
             <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
                 <i class="fa-solid fa-circle-question"></i> クイズ
             </button>
-            <button onclick="switchTab('news')" id="tab-news" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap relative">
+            <button onclick="switchTab('news')" id="tab-news" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
                 <i class="fa-solid fa-bullhorn"></i> お知らせ
-                <span id="news-badge" class="hidden absolute top-2 right-1 w-2 h-2 bg-amber-400 rounded-full"></span>
             </button>
             <button onclick="switchTab('list')" id="tab-list" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
                 <i class="fa-solid fa-list-check"></i> 一覧
@@ -278,7 +283,7 @@
                     <h2 class="font-bold text-slate-800 text-base">お知らせ・アップデート情報</h2>
                     <p class="text-xs text-slate-500">アプリの新機能や更新情報をお知らせします</p>
                 </div>
-                <button onclick="openNewsAdminModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-lg border border-slate-300 transition flex items-center gap-1">
+                <button onclick="openNewsAdminModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-lg border border-slate-300 transition flex items-center gap-1 whitespace-nowrap">
                     <i class="fa-solid fa-pen-to-square"></i> 投稿・管理
                 </button>
             </div>
@@ -382,17 +387,18 @@
 
     </main>
 
-    <!-- News Admin Modal -->
+    <!-- News Admin Modal (Add & Edit) -->
     <div id="newsAdminModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
             <div class="flex justify-between items-center border-b pb-3 border-slate-100">
-                <h3 class="font-bold text-slate-800">お知らせの新規投稿</h3>
+                <h3 id="newsModalTitle" class="font-bold text-slate-800">お知らせの新規投稿</h3>
                 <button onclick="closeNewsAdminModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
+            <input type="hidden" id="editingNewsId" value="">
             <div class="space-y-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">タイトル</label>
-                    <input type="text" id="newsTitleInput" placeholder="例：例文穴埋めクイズ機能を追加！" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <input type="text" id="newsTitleInput" placeholder="例：🎉 お知らせページを追加！" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">お知らせ本文</label>
@@ -401,7 +407,7 @@
             </div>
             <div class="flex gap-2 pt-2">
                 <button onclick="closeNewsAdminModal()" class="w-1/2 bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl text-sm">キャンセル</button>
-                <button onclick="saveNewPost()" class="w-1/2 bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm shadow">投稿する</button>
+                <button onclick="saveNewPost()" class="w-1/2 bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm shadow">保存する</button>
             </div>
         </div>
     </div>
@@ -458,7 +464,7 @@
             { id: 92, word: "なかなか", reading: "なかなか", meaning: "①かえって・むしろ ②中途半端に", origin: "「中々」。中途半端に行うくらいなら「むしろ〜の方がマシだ」というニュアンス。", example: "なかなか言はざるは、言うに勝れり。", learned: false },
             { id: 93, word: "さすがに", reading: "さすがに", meaning: "①そうは言ってもやはり ②そうもいかない", origin: "「流石に」。否定的な事情を認めつつも「そうは言ってもやはり」と繋げる。", example: "さすがに恋しく、いと愛しく覚ゆ。", learned: false },
             { id: 94, word: "あまた", reading: "あまた", meaning: "①たくさん・数多く", origin: "「数多」。数や数量が非常に多い様子を表す副詞。", example: "あまたの人が集まりて、夜を明かす。", learned: false },
-            { id: 95, word: "げに", reading: "げに", meaning: "①なるほど・本当に", origin: "「解に（実にある通り）」。相手の言葉にうなずき「なるほど、本当に」と同調する。", example: "げに美味なるものなり、と言ひて笑ふ。", learned: false },
+            { id: 95, word: "げに", reading: "げに", meaning: "①なるほど・本当に", origin: "「解に（実にある通り）」。相手の言葉にうなずき「なるほど、本当に」と同調する。", example: "げに美味なるものなり、言ひて笑ふ。", learned: false },
             { id: 96, word: "いと・いとど", reading: "いと・いとど", meaning: "①たいそう・非常に ②【いとど】いよいよ・ますます", origin: "程度が甚だしい様。「いとど」は「ますます/いよいよ」と強調表現。", example: "いと美味しく、いとど愛しき心地す。", learned: false },
             { id: 97, word: "やうやう", reading: "ようよう", meaning: "①だんだん・しだいに", origin: "「漸く」。時間の経過に伴って徐々に・次第に変化していく様子。", example: "やうやう白くなりゆく山際、少しあかりて...", learned: false },
             { id: 98, word: "かづく", reading: "かづく", meaning: "①【被く】（褒美を）いただく ②（褒美を）与える", origin: "頭に被ることから「いただく（四段）」、被せることから「与える（下二段）」。", example: "衣をかづきてまかる。殿より禄をかづけ給ふ。", learned: false },
@@ -467,8 +473,9 @@
         ];
 
         const DEFAULT_NEWS = [
-            { id: 1, date: "2026/10/25", title: "🎉 アプリがオープンしました！", content: "解法古文単語350（No.51〜100）の暗記アプリが完成しました！カードでの暗記やクイズでどんどん学習を進めましょう！" },
-            { id: 2, date: "2026/10/25", title: "✨ 例文穴埋めクイズを追加！", content: "4択クイズに「例文穴埋めモード」を追加しました！文脈から適切な古文単語を推理する実戦力を磨きましょう！" }
+            { id: 1, date: "2026/10/25", title: "🎉 お知らせページを追加！", content: "「お知らせ・アップデート情報」ページを追加しました！新機能やアップデート情報をここからチェックできるようになりました！ぜひご活用ください！" },
+            { id: 2, date: "2026/10/25", title: "✨ 例文穴埋めクイズを追加！", content: "4択クイズに「例文穴埋めモード」を追加しました！文脈から適切な古文単語を推理する実戦力を磨きましょう！" },
+            { id: 3, date: "2026/10/25", title: "🎉 アプリがオープンしました！", content: "解法古文単語350（No.51〜100）の暗記アプリが完成しました！カードでの暗記やクイズでどんどん学習を進めましょう！" }
         ];
 
         // State Management
@@ -520,7 +527,7 @@
         }
 
         function loadNewsData() {
-            const saved = localStorage.getItem('kobun_news_data');
+            const saved = localStorage.getItem('kobun_news_data_v2');
             if (saved) {
                 try {
                     newsList = JSON.parse(saved);
@@ -533,16 +540,18 @@
         }
 
         function saveNewsData() {
-            localStorage.setItem('kobun_news_data', JSON.stringify(newsList));
+            localStorage.setItem('kobun_news_data_v2', JSON.stringify(newsList));
             renderNews();
         }
 
         document.getElementById('resetDataBtn').addEventListener('click', () => {
             vocabList = JSON.parse(JSON.stringify(DEFAULT_VOCAB));
+            newsList = JSON.parse(JSON.stringify(DEFAULT_NEWS));
             saveVocabData();
+            saveNewsData();
             filterCards();
             renderTable();
-            showMessage('単語データを初期化しました');
+            showMessage('アプリデータを初期化しました');
         });
 
         // Navigation Tab Switch
@@ -580,7 +589,10 @@
                 card.innerHTML = `
                     <div class="flex justify-between items-start">
                         <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full">${item.date}</span>
-                        <button onclick="deleteNewsItem(${item.id})" class="text-slate-300 hover:text-rose-500 text-xs px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
+                        <div class="flex items-center gap-1">
+                            <button onclick="editNewsItem(${item.id})" class="text-slate-400 hover:text-indigo-600 text-xs px-2 py-1" title="編集"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteNewsItem(${item.id})" class="text-slate-300 hover:text-rose-500 text-xs px-2 py-1" title="削除"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
                     </div>
                     <h3 class="font-bold text-slate-800 text-base">${item.title}</h3>
                     <p class="text-xs text-slate-600 leading-relaxed whitespace-pre-line">${item.content}</p>
@@ -590,8 +602,28 @@
         }
 
         function openNewsAdminModal() {
-            const pwd = prompt("管理者パスワードを入力してください");
-            if (pwd === "6174") {
+            const pwd = prompt("管理者パスワードを入力してください (初期設定: 1234)");
+            if (pwd === "1234") {
+                document.getElementById('newsModalTitle').innerText = "お知らせの新規投稿";
+                document.getElementById('editingNewsId').value = "";
+                document.getElementById('newsTitleInput').value = "";
+                document.getElementById('newsContentInput').value = "";
+                document.getElementById('newsAdminModal').classList.remove('hidden');
+            } else if (pwd !== null) {
+                alert("パスワードが違います");
+            }
+        }
+
+        function editNewsItem(id) {
+            const item = newsList.find(n => n.id === id);
+            if (!item) return;
+
+            const pwd = prompt("編集用の管理者パスワードを入力してください (1234)");
+            if (pwd === "1234") {
+                document.getElementById('newsModalTitle').innerText = "お知らせの編集";
+                document.getElementById('editingNewsId').value = item.id;
+                document.getElementById('newsTitleInput').value = item.title;
+                document.getElementById('newsContentInput').value = item.content;
                 document.getElementById('newsAdminModal').classList.remove('hidden');
             } else if (pwd !== null) {
                 alert("パスワードが違います");
@@ -600,37 +632,52 @@
 
         function closeNewsAdminModal() {
             document.getElementById('newsAdminModal').classList.add('hidden');
-            document.getElementById('newsTitleInput').value = '';
-            document.getElementById('newsContentInput').value = '';
+            document.getElementById('editingNewsId').value = "";
+            document.getElementById('newsTitleInput').value = "";
+            document.getElementById('newsContentInput').value = "";
         }
 
         function saveNewPost() {
             const title = document.getElementById('newsTitleInput').value.trim();
             const content = document.getElementById('newsContentInput').value.trim();
+            const editingId = document.getElementById('editingNewsId').value;
 
             if (!title || !content) {
                 alert("タイトルと本文の両方を入力してください");
                 return;
             }
 
-            const now = new Date();
-            const dateStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
+            if (editingId) {
+                // Edit existing post
+                const idx = newsList.findIndex(n => n.id == editingId);
+                if (idx !== -1) {
+                    newsList[idx].title = title;
+                    newsList[idx].content = content;
+                    saveNewsData();
+                    showMessage('お知らせを更新しました！');
+                }
+            } else {
+                // Add new post
+                const now = new Date();
+                const dateStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
 
-            const newItem = {
-                id: Date.now(),
-                date: dateStr,
-                title: title,
-                content: content
-            };
+                const newItem = {
+                    id: Date.now(),
+                    date: dateStr,
+                    title: title,
+                    content: content
+                };
 
-            newsList.unshift(newItem);
-            saveNewsData();
+                newsList.unshift(newItem);
+                saveNewsData();
+                showMessage('お知らせを投稿しました！');
+            }
+
             closeNewsAdminModal();
-            showMessage('お知らせを更新・追加しました！');
         }
 
         function deleteNewsItem(id) {
-            const pwd = prompt("削除用のパスワードを入力してください");
+            const pwd = prompt("削除用のパスワードを入力してください (1234)");
             if (pwd === "1234") {
                 newsList = newsList.filter(n => n.id !== id);
                 saveNewsData();
@@ -978,3 +1025,4 @@
     </script>
 </body>
 </html>
+```
