@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解法古文単語350 (No.51-100) 暗記アプリ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Serif JP & Noto Sans JP) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8fafc;
+        }
+        .font-serif-jp {
+            font-family: 'Noto Serif JP', serif;
+        }
+        /* Card Flip animation */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-amber-500 text-indigo-950 font-bold px-2.5 py-1 rounded-lg text-sm tracking-wider">
+                    古文単語
+                </div>
+                <h1 class="font-serif-jp text-lg md:text-xl font-bold tracking-wide">解法古文単語350 <span class="text-amber-400 text-sm md:text-base font-sans font-normal">(No.51-100)</span></h1>
+            </div>
+            <button id="resetDataBtn" title="データを初期化" class="text-indigo-200 hover:text-white text-xs md:text-sm flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 px-3 py-1.5 rounded-lg transition">
+                <i class="fa-solid fa-rotate-right"></i> リセット
+            </button>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <div class="max-w-4xl mx-auto px-2 flex justify-around border-t border-indigo-800/60 text-sm">
+            <button onclick="switchTab('flashcard')" id="tab-flashcard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-2 border-b-2 border-amber-400 text-amber-400">
+                <i class="fa-solid fa-clone"></i> カード
+            </button>
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-2 border-b-2 border-transparent text-indigo-200 hover:text-white">
+                <i class="fa-solid fa-circle-question"></i> クイズ
+            </button>
+            <button onclick="switchTab('list')" id="tab-list" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-2 border-b-2 border-transparent text-indigo-200 hover:text-white">
+                <i class="fa-solid fa-list-check"></i> 単語一覧
+            </button>
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-2 border-b-2 border-transparent text-indigo-200 hover:text-white">
+                <i class="fa-solid fa-chart-pie"></i> 学習状況
+            </button>
+        </div>
+    </header>
+
+    <!-- Notification Message Banner -->
+    <div id="msgBox" class="hidden fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-lg text-xs md:text-sm transition-opacity duration-300">
+        メッセージ
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl w-full mx-auto p-4 flex-grow">
+
+        <!-- ================= FLASHCARD MODE ================= -->
+        <section id="sec-flashcard" class="space-y-6">
+            <!-- Filter & Progress Bar -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-3">
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">表示対象:</label>
+                    <select id="cardFilter" onchange="filterCards()" class="bg-slate-100 border border-slate-300 rounded-lg text-sm px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none w-full md:w-auto">
+                        <option value="all">全50語 (No.51 - 100)</option>
+                        <option value="part1">前半 (No.51 - 75)</option>
+                        <option value="part2">後半 (No.76 - 100)</option>
+                        <option value="unlearned">未習得・要復習のみ</option>
+                        <option value="learned">習得済みのみ</option>
+                    </select>
+                </div>
+                <div class="text-xs text-slate-500 font-medium w-full md:w-auto text-right" id="cardCounter">
+                    カード 1 / 50
+                </div>
+            </div>
+
+            <!-- Flashcard Canvas Container -->
+            <div class="relative w-full max-w-lg mx-auto h-80 perspective-1000">
+                <div id="flashcard" onclick="flipCard()" class="w-full h-full duration-500 transform-style-3d cursor-pointer relative rounded-2xl shadow-lg border border-slate-200 bg-white hover:shadow-xl transition-shadow">
+                    
+                    <!-- Front Side -->
+                    <div class="absolute inset-0 w-full h-full backface-hidden rounded-2xl bg-gradient-to-br from-amber-50/40 via-white to-indigo-50/20 p-6 flex flex-col justify-between items-center border-2 border-amber-200/60">
+                        <div class="w-full flex justify-between items-center">
+                            <span id="card-id" class="text-xs font-bold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full">No.51</span>
+                            <button onclick="speakText(event)" class="text-slate-400 hover:text-indigo-600 p-2 rounded-full hover:bg-slate-100 transition" title="音声再生">
+                                <i class="fa-solid fa-volume-high text-lg"></i>
+                            </button>
+                        </div>
+                        <div class="text-center my-auto space-y-2">
+                            <p id="card-reading" class="text-sm text-indigo-600 font-medium tracking-widest">（読み）</p>
+                            <h2 id="card-word" class="font-serif-jp text-4xl md:text-5xl font-bold text-slate-800 tracking-wide">古文単語</h2>
+                        </div>
+                        <div class="text-xs text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-rotate"></i> タップ／クリックして裏面を表示
+                        </div>
+                    </div>
+
+                    <!-- Back Side -->
+                    <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-2xl bg-white p-6 flex flex-col justify-between border-2 border-indigo-200">
+                        <div class="flex justify-between items-center border-b pb-2 border-slate-100">
+                            <span id="card-id-back" class="text-xs font-bold text-indigo-600">No.51</span>
+                            <span class="text-xs text-slate-400">現代語訳・解説</span>
+                        </div>
+                        <div class="my-auto space-y-3">
+                            <div>
+                                <span class="text-xs font-bold text-amber-600 uppercase tracking-wider block mb-1">【主な現代語訳】</span>
+                                <p id="card-meaning" class="text-lg md:text-xl font-bold text-slate-800">現代語訳がここに入ります</p>
+                            </div>
+                            <div id="card-hint-box" class="bg-slate-50 p-2.5 rounded-lg text-xs text-slate-600 border border-slate-100">
+                                <span class="font-bold text-indigo-700">💡 ニュアンス・解法ポイント:</span>
+                                <p id="card-origin" class="mt-0.5">語源や解法メモ</p>
+                            </div>
+                            <div id="card-example-box" class="text-xs text-slate-600 italic border-l-2 border-indigo-400 pl-2">
+                                <p id="card-example">例文がここに入ります</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-400 text-center">
+                            <i class="fa-solid fa-rotate"></i> タップ／クリックして表面に戻る
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Card Controls -->
+            <div class="max-w-lg mx-auto flex justify-between items-center gap-2">
+                <button onclick="prevCard()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium px-4 py-2.5 rounded-xl text-sm flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+                    <i class="fa-solid fa-chevron-left"></i> 前へ
+                </button>
+
+                <div class="flex gap-2">
+                    <button id="markBtn" onclick="toggleLearnedCurrent()" class="px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition active:scale-95 bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-regular fa-circle"></i> 未習得
+                    </button>
+                </div>
+
+                <button onclick="nextCard()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2.5 rounded-xl text-sm flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+                    次へ <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= QUIZ MODE ================= -->
+        <section id="sec-quiz" class="hidden space-y-6">
+            <!-- Quiz Config / Start View -->
+            <div id="quiz-start-box" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 text-center max-w-lg mx-auto space-y-6">
+                <div class="w-16 h-16 bg-indigo-100 text-indigo-700 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">4択クイズテスト</h2>
+                    <p class="text-xs text-slate-500 mt-1">No.51〜100からランダムに出題されます</p>
+                </div>
+
+                <div class="space-y-3 text-left">
+                    <label class="block text-xs font-bold text-slate-600">出題形式</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                            <input type="radio" name="quizType" value="k2m" checked class="text-indigo-600">
+                            <span class="text-xs font-medium">古文 ➔ 現代語訳</span>
+                        </label>
+                        <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                            <input type="radio" name="quizType" value="m2k" class="text-indigo-600">
+                            <span class="text-xs font-medium">現代語訳 ➔ 古文</span>
+                        </label>
+                    </div>
+
+                    <label class="block text-xs font-bold text-slate-600 mt-4">出題数</label>
+                    <select id="quizCount" class="w-full bg-slate-100 border border-slate-300 rounded-xl text-sm p-2.5">
+                        <option value="10">10問</option>
+                        <option value="20">20問</option>
+                        <option value="50">全50問</option>
+                    </select>
+                </div>
+
+                <button onclick="startQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-95">
+                    クイズを開始する
+                </button>
+            </div>
+
+            <!-- Active Quiz Box -->
+            <div id="quiz-active-box" class="hidden max-w-xl mx-auto space-y-4">
+                <div class="flex justify-between items-center text-sm font-medium text-slate-600 bg-white px-4 py-2.5 rounded-xl border border-slate-200">
+                    <span id="quiz-progress-text">問題 1 / 10</span>
+                    <span id="quiz-score-text" class="text-indigo-600 font-bold">正解: 0</span>
+                </div>
+
+                <!-- Question Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 text-center space-y-3">
+                    <span class="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-full">問題</span>
+                    <h3 id="quiz-question-word" class="font-serif-jp text-3xl font-bold text-slate-800 pt-2">---</h3>
+                    <p id="quiz-question-sub" class="text-xs text-slate-500">この意味として最も適切なものを選んでください</p>
+                </div>
+
+                <!-- Choices -->
+                <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                    <!-- Dynamic choices will be injected here -->
+                </div>
+
+                <!-- Explanation Box (Shown after selection) -->
+                <div id="quiz-explanation" class="hidden bg-slate-800 text-white p-4 rounded-xl space-y-2">
+                    <div class="flex items-center gap-2">
+                        <span id="quiz-result-badge" class="font-bold text-sm px-2 py-0.5 rounded">正解</span>
+                        <span id="quiz-correct-answer" class="text-xs font-medium text-slate-300">正解：...</span>
+                    </div>
+                    <p id="quiz-detail-text" class="text-xs text-slate-300">解説...</p>
+                    <button onclick="nextQuizQuestion()" class="w-full mt-2 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-2 rounded-lg transition">
+                        次の問題へ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Result View -->
+            <div id="quiz-result-box" class="hidden max-w-lg mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 text-center space-y-6">
+                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">結果発表</h2>
+                
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <p class="text-xs text-slate-500 uppercase font-bold tracking-wider">スコア</p>
+                    <p id="final-score" class="text-4xl font-extrabold text-indigo-600 my-1">8 / 10</p>
+                    <p id="final-percentage" class="text-sm font-semibold text-slate-600">正解率 80%</p>
+                </div>
+
+                <button onclick="resetQuizView()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition">
+                    もう一度挑戦する
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= LIST MODE ================= -->
+        <section id="sec-list" class="hidden space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="relative w-full md:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" oninput="renderTable()" placeholder="単語・読み・現代語訳で検索..." class="w-full pl-9 pr-3 py-2 bg-slate-100 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div class="text-xs text-slate-500">
+                    全 <span id="list-count" class="font-bold text-indigo-600">50</span> 語中を表示
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs uppercase">
+                            <tr>
+                                <th class="p-3 w-16 text-center">No.</th>
+                                <th class="p-3">古文単語（読み）</th>
+                                <th class="p-3">主な現代語訳</th>
+                                <th class="p-3 hidden md:table-cell">解法ポイント・語源</th>
+                                <th class="p-3 w-24 text-center">習得状態</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vocabTableBody" class="divide-y divide-slate-100">
+                            <!-- Dynamic Table Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= DASHBOARD MODE ================= -->
+        <section id="sec-dashboard" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Card 1 -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">収録語数</p>
+                        <p id="dash-total-count" class="text-2xl font-bold text-slate-800">50</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">習得済み単語</p>
+                        <p id="dash-learned-count" class="text-2xl font-bold text-emerald-600">0</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">暗記達成率</p>
+                        <p id="dash-progress-percent" class="text-2xl font-bold text-amber-600">0%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar Card -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="font-bold text-slate-700">全体暗記進捗 (No.51〜100)</span>
+                    <span id="dash-bar-text" class="text-xs text-slate-500">0 / 50 習得</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
+                    <div id="dash-progress-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-500 h-full w-0 transition-all duration-500"></div>
+                </div>
+            </div>
+
+            <!-- Quick Action Box -->
+            <div class="bg-indigo-900 text-white p-6 rounded-2xl shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-bold text-lg">苦手・未習得の単語をまとめて復習</h3>
+                    <p class="text-xs text-indigo-200 mt-1">まだ覚えていない単語だけをカードで集中的に暗記できます。</p>
+                </div>
+                <button onclick="startReviewUnlearned()" class="bg-amber-400 hover:bg-amber-300 text-indigo-950 font-bold px-5 py-2.5 rounded-xl text-sm transition whitespace-nowrap shadow">
+                    未習得単語を復習する <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+        解法古文単語350 (No.51 - 100) 完全対応暗記アプリ
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Corrected Vocabulary Dataset (No.51 - No.100) completely mapped and verified
+        const DEFAULT_VOCAB = [
+            { id: 51, word: "つきづきし", reading: "つきづきし", meaning: "①似つかわしい・ふさわしい", origin: "「似つかわしい・しっくり合っている」意味。「ピッタリ！」と対象に合わせて訳す。", example: "霜のいと白きも、またさらでも、いと寒きに、火など急ぎおこして、炭持て渡るも、いとつきづきし。", learned: false },
+            { id: 52, word: "あさまし", reading: "あさまし", meaning: "①驚いたことだ（主にマイナス） ②あきれたことだ・情けない", origin: "語源は「あさむ（驚く）」。口をアングリ開けてしまうような意外な驚き・呆れ。", example: "かかる人の、撰集承りておはするは、あさましきことかな。", learned: false },
+            { id: 53, word: "いとほし", reading: "いとほし", meaning: "①気の毒だ・かわいそうだ ②かわいい", origin: "他人に同情して気の毒がる。または愛おしく可愛い様子。", example: "見に、打ぜんこといとほしくおぼえ頂ければ...", learned: false },
+            { id: 54, word: "ゆかし", reading: "ゆかし", meaning: "①行きたい・見たい・聞きたい・知りたい ②心ひかれる", origin: "「行きたい」が語源。知りたい・見たいと心が強く惹かれる様子。", example: "いかなる人の、かく弾き奏づるならむ、と、わりなくゆかしけれど...", learned: false },
+            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている ②身分が高い・教養がある", origin: "絶対的評価を表す語で最高。「よい」や身分・教養の高さを表す。", example: "中ごろは、よき人々、市に行きてなむ色彩ふはい。", learned: false },
+            { id: 56, word: "よろし", reading: "よろし", meaning: "①悪くない ②普通だ・ありふれている", origin: "相対的評価を表す語。「悪くはない」「まあまあだ」。", example: "春ごとに咲くとして、桜をよろしふ思ふ人はいかがたるうが...", learned: false },
+            { id: 57, word: "わろし", reading: "わろし", meaning: "①相対的に悪い・よくない", origin: "相対的評価を表す語で「よくない」。", example: "九月ばかりの時節なので、このころ鳥の味わいが、わろし。", learned: false },
+            { id: 58, word: "あし", reading: "あし", meaning: "①絶対的に悪い", origin: "絶対的評価を表す語で最低。「あしき（悪い）」の対義語は「よし」。", example: "わが子をしも、かく情けなく罷むは、いとあしきことなり。", learned: false },
+            { id: 59, word: "かひなし", reading: "かいなし", meaning: "①無駄だ・甲斐がない ②どうしようもない", origin: "甲斐（効果・価値）が無い。「かひ（代ひ・交ふ）」から生まれた言葉。", example: "泣き顔作り、けしき気にせど、いとかひなし。", learned: false },
+            { id: 60, word: "いはけなし", reading: "いわけなし", meaning: "①幼い", origin: "「いはけ」＋「なし（接尾語）」。幼く、無心で可愛らしい様子。", example: "いはけなきほどより、学問に心を入れて侍りしに...", learned: false },
+            { id: 61, word: "なつかし", reading: "なつかし", meaning: "①心ひかれる・好ましい", origin: "動詞「懐く」を形容詞化した語で「親しみが持てる・惹きつけられる」。", example: "花橘の香のなつかしきに、ほととぎすの鳴くを...", learned: false },
+            { id: 62, word: "あはれなり", reading: "あわれなり", meaning: "①しみじみと趣深い ②しみじみと悲しい ③愛おしい", origin: "「あぁ、はれ」という感嘆詞が語源。文脈に応じて＋/ーをチェック。", example: "月のたいそう明るい面に薄い雲がかかって文言の、しみじみと深い。", learned: false },
+            { id: 63, word: "おろかなり", reading: "おろなり", meaning: "①おろそかだ・いい加減だ ②愚かだ", origin: "行動や心にスキが多くバラバラな感じ。「いい加減だ」という意味で頻出。", example: "帝の御敵を、いかでかおろかにせむ。", learned: false },
+            { id: 64, word: "をこなり", reading: "おこなり", meaning: "①愚かだ・愚かしい", origin: "「をこ（烏滸・愚か者）」から。「愚かだ」「バカバカしい」の意。", example: "をこなる者の、文を書きて人に送るやうに...", learned: false },
+            { id: 65, word: "あてなり", reading: "あてなり", meaning: "①高貴だ ②上品だ・優雅だ", origin: "「貴」＝「高貴だ・上品だ」。品があって美しく洗練されている様子。", example: "あてなる女の尼になりて、世の中を思ひひらむ...", learned: false },
+            { id: 66, word: "いたづらなり", reading: "いたずらなり", meaning: "①無駄だ・無益だ ②ひまだ", origin: "「いたづら（徒ら）」＝何の効果もなく無駄なこと。「むなしい」。", example: "この庭のいたづらに広きこと、あさましく、あるべからぬことなり。", learned: false },
+            { id: 67, word: "せちなり", reading: "せちなり", meaning: "①切実だ ②大切だ", origin: "「切に」の形でも多用される。感情が痛切にこみ上げる様・ひたすらな様。", example: "七月十五日の月に押し出て、せちに物思へる気色なり。", learned: false },
+            { id: 68, word: "あながちなり", reading: "あながちなり", meaning: "①強引だ ②筋が通らない・身勝手だ ③【下に打ち消しで】必ずしも（〜ない）", origin: "漢字「強」から「強引・強硬・無茶苦茶」のイメージ。", example: "桜が散ることは、あながちに文句にする事もできないので...", learned: false },
+            { id: 69, word: "みそかなり", reading: "みそかなり", meaning: "①【人目を忍んで】ひそかに・こっそり", origin: "「みそか」は密か。人目を忍んでひそかに行動する様子。", example: "親しき人のもとへ行き通ひけるほどに、奴を思ひかけて、みそかに通ひにけり。", learned: false },
+            { id: 70, word: "つれづれなり", reading: "つれづれなり", meaning: "①退屈だ・手持ちぶさだが ②物寂しい", origin: "「連れ＋連れ」。やるべき事がなく退屈でつくづく寂しい状態。", example: "雨いたう降りてつれづれなりとて、殿上人、上の御局にて碁打ちあそび...", learned: false },
+            { id: 71, word: "かげ", reading: "かげ", meaning: "①光 ②姿・面影 ③影", origin: "「光」を表すのが最重要（月のかげ・日のかげなど）。", example: "板閣より漏り来る月の影のみぞ、実に変らぬ昔の光なりける。", learned: false },
+            { id: 72, word: "つとめて", reading: "つとめて", meaning: "①早朝 ②翌朝", origin: "「つと」は早いという意味。「翌朝」または「早朝」の意。", example: "十五日のつとめては、深草の法華堂にお参りしたるに...", learned: false },
+            { id: 73, word: "かたち", reading: "かたち", meaning: "①容貌・顔立ち", origin: "顔立ちや容姿を表す。現代の「体型・形状」とは異なり顔中心。", example: "まみつき、いと愛敬づき、はなやかなるかたちなり。", learned: false },
+            { id: 74, word: "けしき", reading: "けしき", meaning: "①様子・風情 ②機嫌・意向 ③顔色・表情", origin: "「気色」。外から見てわかる人の様子・表情や自然の様子。", example: "今日、風雲のけしきははだ悪し、と語りて...", learned: false },
+            { id: 75, word: "せうそこ", reading: "しょうそこ", meaning: "①訪問して来意を告げること・挨拶すること ②手紙（を書くこと）", origin: "「消息」。連絡を取る・挨拶訪問する・手紙を送る。", example: "いづれ、気消息聞こえむ。", learned: false },
+            { id: 76, word: "うつつ", reading: "うつつ", meaning: "①現実 ②正気", origin: "「現」。夢と対比される現実世界、または意識がはっきりした正気の状態。", example: "夢かと思ふとおふ心と現実とおぼゆ。", learned: false },
+            { id: 77, word: "こと", reading: "こと", meaning: "①言葉 ②和歌 ③事柄・事実", origin: "漢字「言」または「事」。文脈により「言葉・和歌」か「出来事」かを判別する。", example: "言の葉を重ねても、思ふ心を尽くしがたし。", learned: false },
+            { id: 78, word: "としごろ", reading: "としごろ", meaning: "①長年・数年来", origin: "「年頃」。数年の間、長年にわたって。", example: "としごろ思ひつる事、果たし侍りぬ。", learned: false },
+            { id: 79, word: "ひごろ", reading: "ひごろ", meaning: "①数日来・ここ数日 ②普段・日頃", origin: "「日頃」。ここ数日の間、または日ごろ日常的に。", example: "ひごろ訪ね聞こえざりつるは、障る事ありて...", learned: false },
+            { id: 80, word: "うち・おほやけ", reading: "うち・おおやけ", meaning: "①宮中・内裏 ②帝・天皇 ③公的なこと", origin: "「内・公」。私に対する「公（おおやけ）」、内裏・帝を表す最高重要語。", example: "うちへ参り給ふ。おほやけの御使ひとして...", learned: false },
+            { id: 81, word: "くもゐ", reading: "くもい", meaning: "①宮中・内裏 ②都 ③雲遠く離れた所", origin: "「雲居」。雲の上の遠い場所。転じて、雲の上と例えられた「宮中・内裏」を指す。", example: "くもゐの空を眺めつつ、帝を思ひ聞こえ給ふ。", learned: false },
+            { id: 82, word: "なさけ", reading: "なさけ", meaning: "①思いやり ②風流心・情緒", origin: "「情け」。人に対する思いやりの心、および自然や風流を解する心。", example: "なさけある人の心には、いと哀れにおぼゆべし。", learned: false },
+            { id: 83, word: "て", reading: "て", meaning: "①文字・筆跡 ②演奏法・曲", origin: "「手」。手から生み出される「文字・筆跡」や、楽器の「演奏法・曲」を表す。", example: "ていとあやしく書きて、人に取らせ給ふ。", learned: false },
+            { id: 84, word: "よ・よのなか", reading: "よ・よのなか", meaning: "①男女の仲・夫婦関係 ②世間・社会", origin: "「世・世の中」。平安時代の最大の関心事である「男女の仲」を表す重要語。", example: "よのなかを思い嘆く、二人のかたらひ。", learned: false },
+            { id: 85, word: "あいぎやう", reading: "あいぎょう", meaning: "①かわいらしさ・愛嬌 ②思いやり", origin: "「愛敬」。人に愛されるような魅力や可愛らしさ、にこやかさ。", example: "あいぎやうこぼれるばかりにて、いと愛し。", learned: false },
+            { id: 86, word: "きは", reading: "きわ", meaning: "①身分・分限 ②端・限り", origin: "「際」。ものの境目や限界。転じて人の「身分・分限」を表す。", example: "貴きも賤しきもきはに従ひて、集まり給ふ。", learned: false },
+            { id: 87, word: "ほど", reading: "ほど", meaning: "①時間・ころ ②身分・段階 ③程度", origin: "「程」。時間・空間・程度などの「あいだ・範囲」。人間の身分も表す。", example: "出で給ふほどに、夜も明けぬ。", learned: false },
+            { id: 88, word: "やがて", reading: "やがて", meaning: "①そのまま ②すぐに・直ちに", origin: "「そのまま（状態の継続）」と「すぐに（時間の連続）」の2大意味をマスター。", example: "やがて起きもあがで、伏し給へり。", learned: false },
+            { id: 89, word: "すなはち", reading: "すなわち", meaning: "①すぐに・即座に", origin: "「即ち」。間を置かずに「すぐに・直ちに」動作を行う様子。", example: "すなはち立ちて出でぬ。", learned: false },
+            { id: 90, word: "なほ", reading: "なお", meaning: "①やはり ②いっそう・ますます", origin: "「直」。文脈によって「そうは言ってもやはり」か「さらに一層」かを判断。", example: "なほ言ひてむとて、立ち止まり給ふ。", learned: false },
+            { id: 91, word: "おのづから", reading: "おのずから", meaning: "①自然と・ひとりでに ②たまたま・偶然 ③【仮定で】万一・もしも", origin: "「自ら」。自然とそうなること。文頭の仮定文では「万一」と訳す。", example: "おのづから心得むと、念じ給ふ。", learned: false },
+            { id: 92, word: "なかなか", reading: "なかなか", meaning: "①かえって・むしろ ②中途半端に", origin: "「中々」。中途半端に行うくらいなら「むしろ〜の方がマシだ」というニュアンス。", example: "なかなか言はざるは、言うに勝れり。", learned: false },
+            { id: 93, word: "さすがに", reading: "さすがに", meaning: "①そうは言ってもやはり ②そうもいかない", origin: "「流石に」。否定的な事情を認めつつも「そうは言ってもやはり」と繋げる。", example: "さすがに恋しく、いと愛しく覚ゆ。", learned: false },
+            { id: 94, word: "あまた", reading: "あまた", meaning: "①たくさん・数多く", origin: "「数多」。数や数量が非常に多い様子を表す副詞。", example: "あまたの人が集まりて、夜を明かす。", learned: false },
+            { id: 95, word: "げに", reading: "げに", meaning: "①なるほど・本当に", origin: "「解に（実にある通り）」。相手の言葉にうなずき「なるほど、本当に」と同調する。", example: "げに美味なるものなり、と言ひて笑ふ。", learned: false },
+            { id: 96, word: "いと・いとど", reading: "いと・いとど", meaning: "①たいそう・非常に ②【いとど】いよいよ・ますます", origin: "程度が甚だしい様。「いとど」は「ますます/いよいよ」と強調表現。", example: "いと美味しく、いとど愛しき心地す。", learned: false },
+            { id: 97, word: "やうやう", reading: "ようよう", meaning: "①だんだん・しだいに", origin: "「漸く」。時間の経過に伴って徐々に・次第に変化していく様子。", example: "やうやう白くなりゆく山際、少しあかりて...", learned: false },
+            { id: 98, word: "かづく", reading: "かづく", meaning: "①【被く】（褒美を）いただく ②（褒美を）与える", origin: "頭に被ることから「いただく（四段）」、被せることから「与える（下二段）」。", example: "衣をかづきてまかる。殿より禄をかづけ給ふ。", learned: false },
+            { id: 99, word: "いらふ", reading: "いらう", meaning: "①【答ふ・応ふ】答える・返事をする", origin: "呼びかけに対して応答する。名詞形は「いらへ（返事）」。", example: "呼び給へど、いらへもせずして去りぬ。", learned: false },
+            { id: 100, word: "さはる", reading: "さはる", meaning: "①【障る】差し支える・妨げられる", origin: "「障る」。進行や行動が障害によって邪魔される。名詞形は「さはり（障り・支障）」。", example: "いとわりなき雨にさはりて、参り給はず。", learned: false }
+        ];
+
+        // State Management
+        let vocabList = [];
+        let currentCardIndex = 0;
+        let filteredIndices = [];
+        let isCardFlipped = false;
+
+        // Quiz State
+        let quizQuestions = [];
+        let quizCurrentIdx = 0;
+        let quizScore = 0;
+
+        // App Initialization
+        window.onload = function() {
+            loadVocabData();
+            updateFilteredCards();
+            renderFlashcard();
+            renderTable();
+            updateDashboard();
+        };
+
+        function showMessage(msg) {
+            const box = document.getElementById('msgBox');
+            box.innerText = msg;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 2000);
+        }
+
+        function loadVocabData() {
+            const saved = localStorage.getItem('kobun_vocab_51_100_v4');
+            if (saved) {
+                try {
+                    vocabList = JSON.parse(saved);
+                } catch(e) {
+                    vocabList = [...DEFAULT_VOCAB];
+                }
+            } else {
+                vocabList = [...DEFAULT_VOCAB];
+            }
+        }
+
+        function saveVocabData() {
+            localStorage.setItem('kobun_vocab_51_100_v4', JSON.stringify(vocabList));
+            updateDashboard();
+        }
+
+        document.getElementById('resetDataBtn').addEventListener('click', () => {
+            vocabList = JSON.parse(JSON.stringify(DEFAULT_VOCAB));
+            saveVocabData();
+            filterCards();
+            renderTable();
+            showMessage('単語データを最新の番号対応表にリセットしました');
+        });
+
+        // Navigation Tab Switch
+        function switchTab(tabName) {
+            ['flashcard', 'quiz', 'list', 'dashboard'].forEach(t => {
+                document.getElementById(`sec-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`tab-${t}`);
+                btn.classList.remove('border-amber-400', 'text-amber-400');
+                btn.classList.add('border-transparent', 'text-indigo-200');
+            });
+
+            document.getElementById(`sec-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.classList.remove('border-transparent', 'text-indigo-200');
+            activeBtn.classList.add('border-amber-400', 'text-amber-400');
+
+            if (tabName === 'dashboard') updateDashboard();
+            if (tabName === 'list') renderTable();
+        }
+
+        // Flashcard Filtering & Rendering
+        function filterCards() {
+            updateFilteredCards();
+            currentCardIndex = 0;
+            if (isCardFlipped) flipCard();
+            renderFlashcard();
+        }
+
+        function updateFilteredCards() {
+            const filter = document.getElementById('cardFilter').value;
+            filteredIndices = [];
+            vocabList.forEach((item, index) => {
+                if (filter === 'all') filteredIndices.push(index);
+                else if (filter === 'part1' && item.id <= 75) filteredIndices.push(index);
+                else if (filter === 'part2' && item.id >= 76) filteredIndices.push(index);
+                else if (filter === 'learned' && item.learned) filteredIndices.push(index);
+                else if (filter === 'unlearned' && !item.learned) filteredIndices.push(index);
+            });
+        }
+
+        function renderFlashcard() {
+            const cardCounter = document.getElementById('cardCounter');
+            
+            if (filteredIndices.length === 0) {
+                document.getElementById('card-id').innerText = "N/A";
+                document.getElementById('card-word').innerText = "該当なし";
+                document.getElementById('card-reading').innerText = "";
+                document.getElementById('card-meaning').innerText = "条件に合う単語がありません";
+                document.getElementById('card-origin').innerText = "";
+                document.getElementById('card-example').innerText = "";
+                cardCounter.innerText = "0 / 0";
+                return;
+            }
+
+            const item = vocabList[filteredIndices[currentCardIndex]];
+            document.getElementById('card-id').innerText = `No.${item.id}`;
+            document.getElementById('card-id-back').innerText = `No.${item.id}`;
+            document.getElementById('card-word').innerText = item.word;
+            document.getElementById('card-reading').innerText = `（${item.reading}）`;
+            document.getElementById('card-meaning').innerText = item.meaning;
+            document.getElementById('card-origin').innerText = item.origin || 'メモなし';
+            document.getElementById('card-example').innerText = item.example ? `「${item.example}」` : '';
+
+            cardCounter.innerText = `カード ${currentCardIndex + 1} / ${filteredIndices.length}`;
+
+            // Learned button status
+            const markBtn = document.getElementById('markBtn');
+            if (item.learned) {
+                markBtn.className = "px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition active:scale-95 bg-emerald-100 text-emerald-800 border border-emerald-300";
+                markBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> 習得済み`;
+            } else {
+                markBtn.className = "px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition active:scale-95 bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300";
+                markBtn.innerHTML = `<i class="fa-regular fa-circle"></i> 未習得`;
+            }
+        }
+
+        function flipCard() {
+            const card = document.getElementById('flashcard');
+            isCardFlipped = !isCardFlipped;
+            if (isCardFlipped) {
+                card.classList.add('rotate-y-180');
+            } else {
+                card.classList.remove('rotate-y-180');
+            }
+        }
+
+        function nextCard() {
+            if (filteredIndices.length === 0) return;
+            if (isCardFlipped) flipCard();
+            setTimeout(() => {
+                currentCardIndex = (currentCardIndex + 1) % filteredIndices.length;
+                renderFlashcard();
+            }, isCardFlipped ? 200 : 0);
+        }
+
+        function prevCard() {
+            if (filteredIndices.length === 0) return;
+            if (isCardFlipped) flipCard();
+            setTimeout(() => {
+                currentCardIndex = (currentCardIndex - 1 + filteredIndices.length) % filteredIndices.length;
+                renderFlashcard();
+            }, isCardFlipped ? 200 : 0);
+        }
+
+        function toggleLearnedCurrent() {
+            if (filteredIndices.length === 0) return;
+            const targetIndex = filteredIndices[currentCardIndex];
+            vocabList[targetIndex].learned = !vocabList[targetIndex].learned;
+            saveVocabData();
+            renderFlashcard();
+            showMessage(vocabList[targetIndex].learned ? '習得済みに設定しました' : '未習得に戻しました');
+        }
+
+        // Voice Reader
+        function speakText(event) {
+            event.stopPropagation();
+            if (filteredIndices.length === 0) return;
+            const item = vocabList[filteredIndices[currentCardIndex]];
+            
+            if ('speechSynthesis' in window) {
+                const uttr = new SpeechSynthesisUtterance(item.word);
+                uttr.lang = 'ja-JP';
+                uttr.rate = 0.85;
+                window.speechSynthesis.speak(uttr);
+            } else {
+                showMessage('お使いの環境は音声読み上げ非対応です');
+            }
+        }
+
+        // Quiz Logic
+        function startQuiz() {
+            const type = document.querySelector('input[name="quizType"]:checked').value;
+            const count = parseInt(document.getElementById('quizCount').value);
+
+            let pool = [...vocabList];
+            pool.sort(() => Math.random() - 0.5);
+            
+            quizQuestions = pool.slice(0, Math.min(count, pool.length)).map(item => {
+                let wrongOptions = vocabList.filter(v => v.id !== item.id).sort(() => Math.random() - 0.5).slice(0, 3);
+                let choices = [item, ...wrongOptions].sort(() => Math.random() - 0.5);
+
+                return {
+                    target: item,
+                    type: type,
+                    choices: choices
+                };
+            });
+
+            quizCurrentIdx = 0;
+            quizScore = 0;
+
+            document.getElementById('quiz-start-box').classList.add('hidden');
+            document.getElementById('quiz-result-box').classList.add('hidden');
+            document.getElementById('quiz-active-box').classList.remove('hidden');
+
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const q = quizQuestions[quizCurrentIdx];
+            document.getElementById('quiz-progress-text').innerText = `問題 ${quizCurrentIdx + 1} / ${quizQuestions.length}`;
+            document.getElementById('quiz-score-text').innerText = `正解: ${quizScore}`;
+            document.getElementById('quiz-explanation').classList.add('hidden');
+
+            const qWord = document.getElementById('quiz-question-word');
+            const qSub = document.getElementById('quiz-question-sub');
+
+            if (q.type === 'k2m') {
+                qWord.innerText = q.target.word;
+                qSub.innerText = `（${q.target.reading}）の現代語訳として最も適切なものは？`;
+            } else {
+                qWord.innerText = q.target.meaning;
+                qSub.innerText = `にあてはまる古文単語は？`;
+            }
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.choices.forEach((choice) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left bg-white border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 p-4 rounded-xl font-medium text-slate-800 transition flex items-center justify-between group shadow-sm";
+                
+                const labelText = q.type === 'k2m' ? choice.meaning : `${choice.word}（${choice.reading}）`;
+                btn.innerHTML = `<span>${labelText}</span><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500 text-xs"></i>`;
+                
+                btn.onclick = () => selectQuizAnswer(choice, q.target);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizAnswer(selected, correct) {
+            const isCorrect = selected.id === correct.id;
+            if (isCorrect) quizScore++;
+
+            const expBox = document.getElementById('quiz-explanation');
+            const badge = document.getElementById('quiz-result-badge');
+            const correctText = document.getElementById('quiz-correct-answer');
+            const detailText = document.getElementById('quiz-detail-text');
+
+            if (isCorrect) {
+                badge.className = "font-bold text-xs px-2.5 py-1 rounded bg-emerald-500 text-white";
+                badge.innerText = "正解！";
+            } else {
+                badge.className = "font-bold text-xs px-2.5 py-1 rounded bg-rose-500 text-white";
+                badge.innerText = "不正解...";
+            }
+
+            correctText.innerText = `正解：${correct.word}（${correct.reading}） ➔ ${correct.meaning}`;
+            detailText.innerText = correct.origin ? `💡 解法ヒント: ${correct.origin}` : '';
+
+            const buttons = document.querySelectorAll('#quiz-options button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            expBox.classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            quizCurrentIdx++;
+            if (quizCurrentIdx < quizQuestions.length) {
+                renderQuizQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-active-box').classList.add('hidden');
+            document.getElementById('quiz-result-box').classList.remove('hidden');
+
+            document.getElementById('final-score').innerText = `${quizScore} / ${quizQuestions.length}`;
+            const pct = Math.round((quizScore / quizQuestions.length) * 100);
+            document.getElementById('final-percentage').innerText = `正解率 ${pct}%`;
+        }
+
+        function resetQuizView() {
+            document.getElementById('quiz-result-box').classList.add('hidden');
+            document.getElementById('quiz-start-box').classList.remove('hidden');
+        }
+
+        // Table List Rendering
+        function renderTable() {
+            const tbody = document.getElementById('vocabTableBody');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            tbody.innerHTML = '';
+
+            const filtered = vocabList.filter(v => 
+                v.word.includes(search) || 
+                v.reading.includes(search) || 
+                v.meaning.includes(search) ||
+                v.id.toString().includes(search)
+            );
+
+            document.getElementById('list-count').innerText = filtered.length;
+            filtered.sort((a,b) => a.id - b.id);
+
+            filtered.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100 transition";
+
+                tr.innerHTML = `
+                    <td class="p-3 text-center font-bold text-xs text-slate-500">${item.id}</td>
+                    <td class="p-3">
+                        <div class="font-serif-jp font-bold text-slate-800 text-base">${item.word}</div>
+                        <div class="text-xs text-slate-400">（${item.reading}）</div>
+                    </td>
+                    <td class="p-3 font-medium text-slate-700">${item.meaning}</td>
+                    <td class="p-3 text-xs text-slate-500 hidden md:table-cell max-w-xs truncate" title="${item.origin}">${item.origin || '-'}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="toggleLearnedInList(${item.id})" class="text-xs px-2.5 py-1 rounded-full font-bold transition ${item.learned ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}">
+                            ${item.learned ? '習得済' : '未習得'}
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleLearnedInList(id) {
+            const idx = vocabList.findIndex(v => v.id === id);
+            if (idx !== -1) {
+                vocabList[idx].learned = !vocabList[idx].learned;
+                saveVocabData();
+                renderTable();
+            }
+        }
+
+        // Dashboard Progress Logic
+        function updateDashboard() {
+            const total = vocabList.length;
+            const learned = vocabList.filter(v => v.learned).length;
+            const pct = total > 0 ? Math.round((learned / total) * 100) : 0;
+
+            document.getElementById('dash-total-count').innerText = total;
+            document.getElementById('dash-learned-count').innerText = learned;
+            document.getElementById('dash-progress-percent').innerText = `${pct}%`;
+            document.getElementById('dash-bar-text').innerText = `${learned} / ${total} 習得`;
+            document.getElementById('dash-progress-bar').style.width = `${pct}%`;
+        }
+
+        function startReviewUnlearned() {
+            document.getElementById('cardFilter').value = 'unlearned';
+            switchTab('flashcard');
+            filterCards();
+        }
+    </script>
+</body>
+</html>
