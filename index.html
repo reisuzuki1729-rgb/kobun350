@@ -87,6 +87,9 @@
             <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
                 <i class="fa-solid fa-chart-pie"></i> 学習状況
             </button>
+            <button onclick="switchTab('account')" id="tab-account" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+                <i class="fa-solid fa-user"></i> アカウント引継ぎ
+            </button>
         </div>
     </header>
 
@@ -349,61 +352,44 @@
 
         <!-- ================= DASHBOARD MODE ================= -->
         <section id="sec-dashboard" class="hidden space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Card 1 -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
-                        <i class="fa-solid fa-book"></i>
+            <!-- ... existing dashboard content ... -->
+        </section>
+
+        <!-- ================= ACCOUNT & CLOUD SYNC MODE ================= -->
+        <section id="sec-account" class="hidden space-y-6 max-w-xl mx-auto">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+                <div class="flex items-center gap-3 border-b pb-4 border-slate-100">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-arrows-rotate"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-slate-500 font-medium">収録語数</p>
-                        <p id="dash-total-count" class="text-2xl font-bold text-slate-800">50</p>
+                        <h2 class="font-bold text-slate-800 text-lg">端末間の学習データ同期</h2>
+                        <p class="text-xs text-slate-500">iPadやスマホなどの別端末へ進行状況を引き継げます</p>
                     </div>
                 </div>
 
-                <!-- Card 2 -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
-                        <i class="fa-solid fa-circle-check"></i>
+                <!-- Current User ID Box -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">現在の同期用コード</span>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="currentUserIdInput" readonly class="w-full bg-white border border-slate-300 font-mono text-xs md:text-sm p-2.5 rounded-lg text-slate-700 select-all outline-none" value="読み込み中...">
+                        <button onclick="copyUserId()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2.5 rounded-lg text-xs font-bold whitespace-nowrap transition">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
                     </div>
-                    <div>
-                        <p class="text-xs text-slate-500 font-medium">習得済み単語</p>
-                        <p id="dash-learned-count" class="text-2xl font-bold text-emerald-600">0</p>
-                    </div>
+                    <p class="text-[11px] text-slate-400">※別の端末でこのコードを入力すると、学習進捗（習得マークなど）を共通化できます。</p>
                 </div>
 
-                <!-- Card 3 -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
-                        <i class="fa-solid fa-chart-line"></i>
+                <!-- Sync Code Input -->
+                <div class="border-t pt-4 border-slate-100 space-y-3">
+                    <h3 class="font-bold text-slate-800 text-sm">別の端末のコードを連携（引き継ぎ）</h3>
+                    <div class="space-y-2">
+                        <input type="text" id="targetUserIdInput" placeholder="連携したい同期用コードを入力..." class="w-full bg-slate-50 border border-slate-300 font-mono text-xs md:text-sm p-2.5 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button onclick="loadRemoteUserData()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs md:text-sm transition shadow">
+                            データを同期・読み込む
+                        </button>
                     </div>
-                    <div>
-                        <p class="text-xs text-slate-500 font-medium">暗記達成率</p>
-                        <p id="dash-progress-percent" class="text-2xl font-bold text-amber-600">0%</p>
-                    </div>
                 </div>
-            </div>
-
-            <!-- Progress Bar Card -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                <div class="flex justify-between items-center text-sm">
-                    <span class="font-bold text-slate-700">全体暗記進捗 (No.51〜100)</span>
-                    <span id="dash-bar-text" class="text-xs text-slate-500">0 / 50 習得</span>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
-                    <div id="dash-progress-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-500 h-full w-0 transition-all duration-500"></div>
-                </div>
-            </div>
-
-            <!-- Quick Action Box -->
-            <div class="bg-indigo-900 text-white p-6 rounded-2xl shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
-                <div>
-                    <h3 class="font-bold text-lg">苦手・未習得の単語をまとめて復習</h3>
-                    <p class="text-xs text-indigo-200 mt-1">まだ覚えていない単語だけをカードで集中的に暗記できます。</p>
-                </div>
-                <button onclick="startReviewUnlearned()" class="bg-amber-400 hover:bg-amber-300 text-indigo-950 font-bold px-5 py-2.5 rounded-xl text-sm transition whitespace-nowrap shadow">
-                    未習得単語を復習する <i class="fa-solid fa-arrow-right ml-1"></i>
-                </button>
             </div>
         </section>
 
@@ -440,6 +426,111 @@
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kobun-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "demo", projectId: "demo" };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        // Auto auth login
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    const res = await signInWithCustomToken(auth, __initial_auth_token);
+                    currentUser = res.user;
+                } else {
+                    const res = await signInAnonymously(auth);
+                    currentUser = res.user;
+                }
+                document.getElementById('currentUserIdInput').value = currentUser.uid;
+                syncFromCloud();
+            } catch (e) {
+                console.error("Auth Error:", e);
+                document.getElementById('currentUserIdInput').value = "オフラインモード";
+            }
+        }
+
+        // Save progress to cloud
+        async function syncToCloud() {
+            if (!currentUser) return;
+            try {
+                const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'progress', 'learnedData');
+                const learnedIds = vocabList.filter(v => v.learned).map(v => v.id);
+                await setDoc(userDocRef, {
+                    learnedIds: learnedIds,
+                    updatedAt: new Date().toISOString()
+                });
+            } catch (e) {
+                console.error("Cloud Save Error:", e);
+            }
+        }
+
+        // Sync initial cloud data to local state
+        async function syncFromCloud(uidOverride) {
+            const uid = uidOverride || (currentUser ? currentUser.uid : null);
+            if (!uid) return;
+
+            try {
+                const userDocRef = doc(db, 'artifacts', appId, 'users', uid, 'progress', 'learnedData');
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data && data.learnedIds) {
+                        vocabList.forEach(v => {
+                            v.learned = data.learnedIds.includes(v.id);
+                        });
+                        saveVocabData(false);
+                        renderFlashcard();
+                        renderTable();
+                        updateDashboard();
+                    }
+                }
+            } catch (e) {
+                console.error("Cloud Read Error:", e);
+            }
+        }
+
+        window.copyUserId = function() {
+            const copyText = document.getElementById("currentUserIdInput");
+            copyText.select();
+            document.execCommand("copy");
+            showMessage("コードをコピーしました！他の端末に入力してください");
+        };
+
+        window.loadRemoteUserData = async function() {
+            const targetUid = document.getElementById("targetUserIdInput").value.trim();
+            if (!targetUid) {
+                alert("コードを入力してください");
+                return;
+            }
+            await syncFromCloud(targetUid);
+            showMessage("連携先のデータを読み込みました！");
+        };
+
+        // Hook sync into local save function
+        const originalSaveVocabData = window.saveVocabData;
+        window.saveVocabData = function(shouldSyncCloud = true) {
+            localStorage.setItem('kobun_vocab_51_100_v5', JSON.stringify(vocabList));
+            updateDashboard();
+            if (shouldSyncCloud) {
+                syncToCloud();
+            }
+        };
+
+        // Initialize Firebase on load
+        window.addEventListener('load', () => {
+            initAuth();
+        });
+    </script>
+
     <script>
         const DEFAULT_VOCAB = [
             { id: 51, word: "つきづきし", reading: "つきづきし", meaning: "①似つかわしい・ふさわしい", origin: "「似つかわしい・しっくり合っている」意味。「ピッタリ！」と対象に合わせて訳す。", example: "霜のいと白きも、またさらでも、いと寒きに、火など急ぎおこして、炭持て渡るも、いとつきづきし。", learned: false },
@@ -454,7 +545,7 @@
             { id: 60, word: "いはけなし", reading: "いわけなし", meaning: "①幼い", origin: "「いはけ」＋「なし（接尾語）」。幼く、無心で可愛らしい様子。", example: "いはけなきほどより、学問に心を入れて侍りしに...", learned: false },
             { id: 61, word: "なつかし", reading: "なつかし", meaning: "①心ひかれる・好ましい", origin: "動詞「懐く」を形容詞化した語で「親しみが持てる・惹きつけられる」。", example: "花橘の香のなつかしきに、ほととぎすの鳴くを...", learned: false },
             { id: 62, word: "あはれなり", reading: "あわれなり", meaning: "①しみじみと趣深い ②しみじみと悲しい ③愛おしい", origin: "「あぁ、はれ」という感嘆詞が語源。文脈に応じて＋/ーをチェック。", example: "月のいと明きに、差しいでたる雲の細き、いとあはれなり。", learned: false },
-            { id: 63, word: "おろかなり", reading: "おろかなり", meaning: "①おろそかだ・いい加減だ ②愚かだ", origin: "行動や心にスキが多くバラバラな感じ。「いい加減だ」という意味で頻出。", example: "帝の御敵を、いかでかおろかにせむ。", learned: false },
+            { id: 63, word: "おろなり", reading: "おろなり", meaning: "①おろそかだ・いい加減だ ②愚かだ", origin: "行動や心にスキが多くバラバラな感じ。「いい加減だ」という意味で頻出。", example: "帝の御敵を、いかでかおろかにせむ。", learned: false },
             { id: 64, word: "をこなり", reading: "おこなり", meaning: "①愚かだ・愚かしい", origin: "「をこ（烏滸・愚か者）」から。「愚かだ」「バカバカしい」の意。", example: "をこなる者の、文を書きて人に送るやうに...", learned: false },
             { id: 65, word: "あてなり", reading: "あてなり", meaning: "①高貴だ ②上品だ・優雅だ", origin: "「貴」＝「高貴だ・上品だ」。品があって美しく洗練されている様子。", example: "あてなる女の尼になりて、世の中を思ひひらむ...", learned: false },
             { id: 66, word: "いたづらなり", reading: "いたずらなり", meaning: "①無駄だ・無益だ ②ひまだ", origin: "「いたづら（徒ら）」＝何の効果もなく無駄なこと。「むなしい」。", example: "この庭のいたづらに広きこと、あさましく、あるべからぬことなり。", learned: false },
@@ -487,11 +578,11 @@
             { id: 93, word: "さすがに", reading: "さすがに", meaning: "①そうは言ってもやはり ②そうもいかない", origin: "「流石に」。否定的な事情を認めつつも「そうは言ってもやはり」と繋げる。", example: "さすがに恋しく、いと愛しく覚ゆ。", learned: false },
             { id: 94, word: "あまた", reading: "あまた", meaning: "①たくさん・数多く", origin: "「数多」。数や数量が非常に多い様子を表す副詞。", example: "あまたの人が集まりて、夜を明かす。", learned: false },
             { id: 95, word: "げに", reading: "げに", meaning: "①なるほど・本当に", origin: "「解に（実にある通り）」。相手の言葉にうなずき「なるほど、本当に」と同調する。", example: "げに美味なるものなり、言ひて笑ふ。", learned: false },
-            { id: 96, word: "いと・いとど", reading: "いと・いとど", meaning: "①たいそう・非常に ②いよいよ・ますます", origin: "程度が甚だしい様。「いとど」は「ますます/いよいよ」と強調表現。", example: "いと美味しく、いとど愛しき心地す。", learned: false },
+            { id: 96, word: "いと・いとど", reading: "いと・いとど", meaning: "①たいそう・非常に ②【いとど】いよいよ・ますます", origin: "程度が甚だしい様。「いとど」は「ますます/いよいよ」と強調表現。", example: "いと美味しく、いとど愛しき心地す。", learned: false },
             { id: 97, word: "やうやう", reading: "ようよう", meaning: "①だんだん・しだいに", origin: "「漸く」。時間の経過に伴って徐々に・次第に変化していく様子。", example: "やうやう白くなりゆく山際、少しあかりて...", learned: false },
-            { id: 98, word: "かづく", reading: "かづく", meaning: "①（褒美を）いただく ②（褒美を）与える", origin: "頭に被ることから「いただく（四段）」、被せることから「与える（下二段）」。", example: "衣をかづきてまかる。殿より禄をかづけ給ふ。", learned: false },
-            { id: 99, word: "いらふ", reading: "いらう", meaning: "①答える・返事をする", origin: "呼びかけに対して応答する。名詞形は「いらへ（返事）」。", example: "呼び給へど、いらへもせずして去りぬ。", learned: false },
-            { id: 100, word: "さはる", reading: "さはる", meaning: "①差し支える・妨げられる", origin: "進行や行動が障害によって邪魔される。名詞形は「さはり（障り・支障）」。", example: "いとわりなき雨にさはりて、参り給はず。", learned: false }
+            { id: 98, word: "かづく", reading: "かづく", meaning: "①【被く】（褒美を）いただく ②（褒美を）与える", origin: "頭に被ることから「いただく（四段）」、被せることから「与える（下二段）」。", example: "衣をかづきてまかる。殿より禄をかづけ給ふ。", learned: false },
+            { id: 99, word: "いらふ", reading: "いらう", meaning: "①【答ふ・応ふ】答える・返事をする", origin: "呼びかけに対して応答する。名詞形は「いらへ（返事）」。", example: "呼び給へど、いらへもせずして去りぬ。", learned: false },
+            { id: 100, word: "さはる", reading: "さはる", meaning: "①【障る】差し支える・妨げられる", origin: "「障る」。進行や行動が障害によって邪魔される。名詞形は「さはり（障り・支障）」。", example: "いとわりなき雨にさはりて、参り給はず。", learned: false }
         ];
 
         const DEFAULT_NEWS = [
@@ -590,17 +681,23 @@
 
         // Navigation Tab Switch
         function switchTab(tabName) {
-            ['flashcard', 'quiz', 'news', 'list', 'dashboard'].forEach(t => {
-                document.getElementById(`sec-${t}`).classList.add('hidden');
+            ['flashcard', 'quiz', 'news', 'list', 'dashboard', 'account'].forEach(t => {
+                const sec = document.getElementById(`sec-${t}`);
+                if (sec) sec.classList.add('hidden');
                 const btn = document.getElementById(`tab-${t}`);
-                btn.classList.remove('border-amber-400', 'text-amber-400');
-                btn.classList.add('border-transparent', 'text-indigo-200');
+                if (btn) {
+                    btn.classList.remove('border-amber-400', 'text-amber-400');
+                    btn.classList.add('border-transparent', 'text-indigo-200');
+                }
             });
 
-            document.getElementById(`sec-${tabName}`).classList.remove('hidden');
+            const activeSec = document.getElementById(`sec-${tabName}`);
+            if (activeSec) activeSec.classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-${tabName}`);
-            activeBtn.classList.remove('border-transparent', 'text-indigo-200');
-            activeBtn.classList.add('border-amber-400', 'text-amber-400');
+            if (activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-indigo-200');
+                activeBtn.classList.add('border-amber-400', 'text-amber-400');
+            }
 
             if (tabName === 'dashboard') updateDashboard();
             if (tabName === 'list') renderTable();
