@@ -102,15 +102,24 @@
         <section id="sec-flashcard" class="space-y-6">
             <!-- Filter & Progress Bar -->
             <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-3">
-                <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
                     <label class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">表示対象:</label>
-                    <select id="cardFilter" onchange="filterCards()" class="bg-slate-100 border border-slate-300 rounded-lg text-sm px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none w-full md:w-auto">
+                    <select id="cardFilter" onchange="onCardFilterChange()" class="bg-slate-100 border border-slate-300 rounded-lg text-sm px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none w-full sm:w-auto">
                         <option value="all">全50語 (No.51 - 100)</option>
                         <option value="part1">前半 (No.51 - 75)</option>
                         <option value="part2">後半 (No.76 - 100)</option>
+                        <option value="custom">番号を範囲指定</option>
                         <option value="unlearned">未習得・要復習のみ</option>
                         <option value="learned">習得済みのみ</option>
                     </select>
+
+                    <!-- Custom Range Inputs (Cards) -->
+                    <div id="cardCustomRangeBox" class="hidden flex items-center gap-1.5 text-xs">
+                        <input type="number" id="cardStartNo" min="51" max="100" value="51" class="w-16 bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-center font-bold">
+                        <span>〜</span>
+                        <input type="number" id="cardEndNo" min="51" max="100" value="70" class="w-16 bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-center font-bold">
+                        <button onclick="filterCards()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-lg transition">適用</button>
+                    </div>
                 </div>
                 <div class="text-xs text-slate-500 font-medium w-full md:w-auto text-right" id="cardCounter">
                     カード 1 / 50
@@ -192,72 +201,96 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-slate-800">テストモード選択</h2>
-                    <p class="text-xs text-slate-500 mt-1">No.51〜100からランダムに出題されます</p>
+                    <p class="text-xs text-slate-500 mt-1">出題範囲や形式を自由にカスタマイズできます</p>
                 </div>
 
-                <div class="space-y-3 text-left">
-                    <label class="block text-xs font-bold text-slate-600">出題形式</label>
-                    <div class="grid grid-cols-1 gap-2.5">
-                        <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
-                            <input type="radio" name="quizType" value="k2m" checked class="text-indigo-600">
-                            <span class="text-xs font-medium">基本：4択（古文 ➔ 現代語訳）</span>
-                        </label>
-                        <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
-                            <input type="radio" name="quizType" value="m2k" class="text-indigo-600">
-                            <span class="text-xs font-medium">逆引き：4択（現代語訳 ➔ 古文）</span>
-                        </label>
-                        <label class="border border-amber-300 bg-amber-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-amber-100/50">
-                            <input type="radio" name="quizType" value="example" class="text-indigo-600">
-                            <span class="text-xs font-bold text-amber-900">✨ 4択：例文（穴埋め）➔ 古文単語</span>
-                        </label>
-                        <label class="border border-indigo-300 bg-indigo-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-indigo-100/50">
-                            <input type="radio" name="quizType" value="input" class="text-indigo-600">
-                            <span class="text-xs font-bold text-indigo-900">✍️ 記述：意味 ➔ 古文単語入力</span>
-                        </label>
-                        <label class="border border-emerald-300 bg-emerald-50/40 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-100/50">
-                            <input type="radio" name="quizType" value="input_example" class="text-indigo-600">
-                            <span class="text-xs font-bold text-emerald-900">✍️ 記述：例文（穴埋め）➔ 古文単語入力</span>
-                        </label>
+                <div class="space-y-4 text-left">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-600">出題範囲</label>
+                        <select id="quizRangeSelect" onchange="toggleQuizCustomRange()" class="w-full bg-slate-100 border border-slate-300 rounded-xl text-sm p-2.5 font-medium outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="all">全範囲 (No.51〜100)</option>
+                            <option value="part1">前半 (No.51〜75)</option>
+                            <option value="part2">後半 (No.76〜100)</option>
+                            <option value="custom">番号を指定して出題</option>
+                            <option value="unlearned">未習得・要復習のみ</option>
+                        </select>
+
+                        <!-- Custom Range Inputs (Quiz) -->
+                        <div id="quizCustomRangeBox" class="hidden flex items-center justify-center gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                            <span class="font-bold text-slate-600">No.</span>
+                            <input type="number" id="quizStartNo" min="51" max="100" value="51" class="w-20 bg-white border border-slate-300 rounded-lg p-2 text-center font-bold text-sm">
+                            <span class="font-bold text-slate-600">〜</span>
+                            <input type="number" id="quizEndNo" min="51" max="100" value="70" class="w-20 bg-white border border-slate-300 rounded-lg p-2 text-center font-bold text-sm">
+                        </div>
                     </div>
 
-                    <label class="block text-xs font-bold text-slate-600 mt-4">出題数</label>
-                    <select id="quizCount" class="w-full bg-slate-100 border border-slate-300 rounded-xl text-sm p-2.5">
-                        <option value="10">10問</option>
-                        <option value="20">20問</option>
-                        <option value="50">全50問</option>
-                    </select>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-600">出題形式</label>
+                        <div class="grid grid-cols-1 gap-2.5">
+                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                                <input type="radio" name="quizType" value="k2m" checked class="text-indigo-600">
+                                <span class="text-xs font-medium">基本：4択（古文 ➔ 現代語訳）</span>
+                            </label>
+                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                                <input type="radio" name="quizType" value="m2k" class="text-indigo-600">
+                                <span class="text-xs font-medium">逆引き：4択（現代語訳 ➔ 古文）</span>
+                            </label>
+                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                                <input type="radio" name="quizType" value="example" class="text-indigo-600">
+                                <span class="text-xs font-medium">実戦：4択（例文穴埋め）</span>
+                            </label>
+                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                                <input type="radio" name="quizType" value="input" class="text-indigo-600">
+                                <span class="text-xs font-medium">記述：キーボード入力（意味 ➔ 単語）</span>
+                            </label>
+                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                                <input type="radio" name="quizType" value="input_example" class="text-indigo-600">
+                                <span class="text-xs font-medium">記述：キーボード入力（例文穴埋め）</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-600">問題数</label>
+                        <select id="quizCount" class="w-full bg-slate-100 border border-slate-300 rounded-xl text-sm p-2.5 font-medium outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="10">10問</option>
+                            <option value="20">20問</option>
+                            <option value="50">全50問</option>
+                        </select>
+                    </div>
                 </div>
 
-                <button onclick="startQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-95">
-                    クイズを開始する
+                <button onclick="startQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-md transition active:scale-95">
+                    テストを開始する
                 </button>
             </div>
 
-            <!-- Active Quiz Box -->
-            <div id="quiz-active-box" class="hidden max-w-xl mx-auto space-y-4">
-                <div class="flex justify-between items-center text-sm font-medium text-slate-600 bg-white px-4 py-2.5 rounded-xl border border-slate-200">
+            <!-- Quiz Active Playing View -->
+            <div id="quiz-active-box" class="hidden max-w-lg mx-auto bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <!-- Header Status -->
+                <div class="flex justify-between items-center text-xs font-bold text-slate-500 border-b pb-3 border-slate-100">
                     <span id="quiz-progress-text">問題 1 / 10</span>
-                    <span id="quiz-score-text" class="text-indigo-600 font-bold">正解: 0</span>
+                    <span id="quiz-badge" class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded">4択テスト</span>
+                    <span id="quiz-score-text" class="text-emerald-600">正解: 0</span>
                 </div>
 
-                <!-- Question Card -->
-                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 text-center space-y-3">
-                    <span id="quiz-badge" class="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-full">問題</span>
-                    <h3 id="quiz-question-word" class="font-serif-jp text-2xl md:text-3xl font-bold text-slate-800 pt-2 leading-relaxed">---</h3>
-                    <p id="quiz-question-sub" class="text-xs text-slate-500">この意味として最も適切なものを選んでください</p>
+                <!-- Question Text Box -->
+                <div class="text-center py-2 space-y-2">
+                    <p id="quiz-question-sub" class="text-xs text-slate-400 font-medium">以下の現代語訳に合う単語を選んでください</p>
+                    <h3 id="quiz-question-word" class="font-serif-jp text-3xl md:text-4xl font-bold text-slate-800 tracking-wide">単語</h3>
                 </div>
 
-                <!-- Choices (4択用) -->
-                <div id="quiz-options" class="grid grid-cols-1 gap-3">
-                    <!-- Dynamic choices will be injected here -->
+                <!-- 4-Choice Option Buttons -->
+                <div id="quiz-options" class="grid grid-cols-1 gap-2.5">
+                    <!-- Dynamic Choices -->
                 </div>
 
-                <!-- Input Field & On-Screen Japanese Keyboard (記述入力用) -->
-                <div id="quiz-input-container" class="hidden bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                <!-- Keyboard Input Field (For Input Modes) -->
+                <div id="quiz-input-container" class="hidden space-y-4">
                     <div class="flex gap-2">
-                        <input type="text" id="quizTextInput" readonly autocomplete="off" placeholder="下のキーボードで入力..." class="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-lg text-center font-bold text-indigo-900 outline-none select-none">
-                        <button id="quizInputSubmitBtn" onclick="submitInputAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl transition whitespace-nowrap shadow-sm text-sm">
-                            判定
+                        <input type="text" id="quizTextInput" placeholder="ひらがなで入力..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-base font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button id="quizInputSubmitBtn" onclick="submitInputAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl transition whitespace-nowrap text-sm">
+                            回答
                         </button>
                     </div>
 
@@ -727,17 +760,20 @@
             renderNews();
             updateDashboard();
 
-            // Setup Event Listener for Input Mode Enter Key
-            document.getElementById('quizTextInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const expBox = document.getElementById('quiz-explanation');
-                    if (expBox.classList.contains('hidden')) {
-                        submitInputAnswer();
-                    } else {
-                        nextQuizQuestion();
+            // Setup Event Listener for Input Mode Enter Key safely
+            const textInput = document.getElementById('quizTextInput');
+            if (textInput) {
+                textInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const expBox = document.getElementById('quiz-explanation');
+                        if (expBox.classList.contains('hidden')) {
+                            submitInputAnswer();
+                        } else {
+                            nextQuizQuestion();
+                        }
                     }
-                }
-            });
+                });
+            }
         };
 
         function showMessage(msg) {
@@ -893,7 +929,7 @@
         }
 
         window.openNewsAdminModal = function() {
-            const pwd = prompt("管理者パスワードを入力してください");
+            const pwd = prompt("管理者パスワードを入力してください（デフォルト: 1234）");
             if (pwd === "1234") {
                 document.getElementById('newsModalTitle').innerText = "お知らせの新規投稿";
                 document.getElementById('editingNewsId').value = "";
@@ -909,7 +945,7 @@
             const item = newsList.find(n => n.id === id);
             if (!item) return;
 
-            const pwd = prompt("編集用の管理者パスワードを入力してください");
+            const pwd = prompt("編集用の管理者パスワードを入力してください（デフォルト: 1234）");
             if (pwd === "1234") {
                 document.getElementById('newsModalTitle').innerText = "お知らせの編集";
                 document.getElementById('editingNewsId').value = item.id;
@@ -966,7 +1002,7 @@
         };
 
         window.deleteNewsItem = function(id) {
-            const pwd = prompt("削除用のパスワードを入力してください");
+            const pwd = prompt("削除用のパスワードを入力してください（デフォルト: 1234）");
             if (pwd === "1234") {
                 newsList = newsList.filter(n => n.id !== id);
                 saveNewsData();
@@ -977,6 +1013,17 @@
         };
 
         // Flashcard Filtering & Rendering
+        window.onCardFilterChange = function() {
+            const filter = document.getElementById('cardFilter').value;
+            const customBox = document.getElementById('cardCustomRangeBox');
+            if (filter === 'custom') {
+                customBox.classList.remove('hidden');
+            } else {
+                customBox.classList.add('hidden');
+            }
+            filterCards();
+        };
+
         window.filterCards = function() {
             updateFilteredCards();
             currentCardIndex = 0;
@@ -986,11 +1033,15 @@
 
         function updateFilteredCards() {
             const filter = document.getElementById('cardFilter').value;
+            const startNo = parseInt(document.getElementById('cardStartNo').value) || 51;
+            const endNo = parseInt(document.getElementById('cardEndNo').value) || 100;
+
             filteredIndices = [];
             vocabList.forEach((item, index) => {
                 if (filter === 'all') filteredIndices.push(index);
                 else if (filter === 'part1' && item.id <= 75) filteredIndices.push(index);
                 else if (filter === 'part2' && item.id >= 76) filteredIndices.push(index);
+                else if (filter === 'custom' && item.id >= startNo && item.id <= endNo) filteredIndices.push(index);
                 else if (filter === 'learned' && item.learned) filteredIndices.push(index);
                 else if (filter === 'unlearned' && !item.learned) filteredIndices.push(index);
             });
@@ -1109,11 +1160,40 @@
         }
 
         // Quiz Logic
+        window.toggleQuizCustomRange = function() {
+            const rangeType = document.getElementById('quizRangeSelect').value;
+            const customBox = document.getElementById('quizCustomRangeBox');
+            if (rangeType === 'custom') {
+                customBox.classList.remove('hidden');
+            } else {
+                customBox.classList.add('hidden');
+            }
+        };
+
         window.startQuiz = function() {
             const type = document.querySelector('input[name="quizType"]:checked').value;
             const count = parseInt(document.getElementById('quizCount').value);
+            const rangeType = document.getElementById('quizRangeSelect').value;
 
+            // Filter pool by chosen range
             let pool = [...vocabList];
+            if (rangeType === 'part1') {
+                pool = pool.filter(v => v.id <= 75);
+            } else if (rangeType === 'part2') {
+                pool = pool.filter(v => v.id >= 76);
+            } else if (rangeType === 'custom') {
+                const s = parseInt(document.getElementById('quizStartNo').value) || 51;
+                const e = parseInt(document.getElementById('quizEndNo').value) || 100;
+                pool = pool.filter(v => v.id >= s && v.id <= e);
+            } else if (rangeType === 'unlearned') {
+                pool = pool.filter(v => !v.learned);
+            }
+
+            if (pool.length === 0) {
+                alert("指定された範囲内に単語がありません。範囲を変更してください。");
+                return;
+            }
+
             pool.sort(() => Math.random() - 0.5);
             
             quizQuestions = pool.slice(0, Math.min(count, pool.length)).map(item => {
