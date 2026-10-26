@@ -87,9 +87,6 @@
             <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
                 <i class="fa-solid fa-chart-pie"></i> 学習状況
             </button>
-            <button onclick="switchTab('account')" id="tab-account" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
-                <i class="fa-solid fa-user"></i> アカウント引継ぎ
-            </button>
         </div>
     </header>
 
@@ -255,17 +252,90 @@
                     <!-- Dynamic choices will be injected here -->
                 </div>
 
-                <!-- Input Field (記述入力用) -->
-                <div id="quiz-input-container" class="hidden bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                <!-- Input Field & On-Screen Japanese Keyboard (記述入力用) -->
+                <div id="quiz-input-container" class="hidden bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
                     <div class="flex gap-2">
-                        <input type="text" id="quizTextInput" placeholder="古文単語（ひらがな可）を入力..." class="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-indigo-500 outline-none font-medium">
-                        <button id="quizInputSubmitBtn" onclick="submitInputAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-sm">
+                        <input type="text" id="quizTextInput" readonly autocomplete="off" placeholder="下のキーボードで入力..." class="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-lg text-center font-bold text-indigo-900 outline-none select-none">
+                        <button id="quizInputSubmitBtn" onclick="submitInputAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl transition whitespace-nowrap shadow-sm text-sm">
                             判定
                         </button>
                     </div>
-                    <p class="text-[11px] text-slate-400 flex items-center gap-1">
-                        <i class="fa-solid fa-keyboard"></i> Enterキーを押しても解答判定できます
-                    </p>
+
+                    <!-- Custom Japanese On-Screen Keypad -->
+                    <div id="virtual-keyboard" class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
+                        <div class="text-[11px] font-bold text-slate-500 text-center mb-1">画面キーボード（予測変換なし）</div>
+                        
+                        <!-- 50音 Grid -->
+                        <div class="grid grid-cols-10 gap-1 text-center text-xs font-bold text-slate-700">
+                            <!-- ア行 -->
+                            <button onclick="pressKey('あ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">あ</button>
+                            <button onclick="pressKey('い')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">い</button>
+                            <button onclick="pressKey('う')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">う</button>
+                            <button onclick="pressKey('え')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">え</button>
+                            <button onclick="pressKey('お')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">お</button>
+                            <!-- カ行 -->
+                            <button onclick="pressKey('か')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">か</button>
+                            <button onclick="pressKey('き')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">き</button>
+                            <button onclick="pressKey('く')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">く</button>
+                            <button onclick="pressKey('け')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">け</button>
+                            <button onclick="pressKey('こ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">こ</button>
+                            <!-- サ行 -->
+                            <button onclick="pressKey('さ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">さ</button>
+                            <button onclick="pressKey('し')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">し</button>
+                            <button onclick="pressKey('す')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">す</button>
+                            <button onclick="pressKey('せ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">せ</button>
+                            <button onclick="pressKey('そ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">そ</button>
+                            <!-- タ行 -->
+                            <button onclick="pressKey('た')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">た</button>
+                            <button onclick="pressKey('ち')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ち</button>
+                            <button onclick="pressKey('つ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">つ</button>
+                            <button onclick="pressKey('て')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">て</button>
+                            <button onclick="pressKey('と')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">と</button>
+                            <!-- ナ行 -->
+                            <button onclick="pressKey('な')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">な</button>
+                            <button onclick="pressKey('に')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">に</button>
+                            <button onclick="pressKey('ぬ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ぬ</button>
+                            <button onclick="pressKey('ね')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ね</button>
+                            <button onclick="pressKey('の')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">の</button>
+                            <!-- ハ行 -->
+                            <button onclick="pressKey('は')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">は</button>
+                            <button onclick="pressKey('ひ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ひ</button>
+                            <button onclick="pressKey('ふ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ふ</button>
+                            <button onclick="pressKey('へ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">へ</button>
+                            <button onclick="pressKey('ほ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ほ</button>
+                            <!-- マ行 -->
+                            <button onclick="pressKey('ま')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ま</button>
+                            <button onclick="pressKey('み')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">み</button>
+                            <button onclick="pressKey('む')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">む</button>
+                            <button onclick="pressKey('め')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">め</button>
+                            <button onclick="pressKey('も')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">も</button>
+                            <!-- ヤ行 / ラ行 -->
+                            <button onclick="pressKey('や')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">や</button>
+                            <button onclick="pressKey('ゆ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ゆ</button>
+                            <button onclick="pressKey('よ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">よ</button>
+                            <button onclick="pressKey('ら')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ら</button>
+                            <button onclick="pressKey('り')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">り</button>
+                            <button onclick="pressKey('る')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">る</button>
+                            <button onclick="pressKey('れ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">れ</button>
+                            <button onclick="pressKey('ろ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ろ</button>
+                            <!-- ワ行 / ん / 記号 -->
+                            <button onclick="pressKey('わ')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">わ</button>
+                            <button onclick="pressKey('を')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">を</button>
+                            <button onclick="pressKey('ん')" class="key-btn bg-white hover:bg-indigo-100 p-2 rounded border border-slate-200 active:bg-indigo-200">ん</button>
+                            <button onclick="pressKey('っ')" class="key-btn bg-amber-50 hover:bg-amber-100 p-2 rounded border border-amber-200 text-amber-900 active:bg-amber-200">促音</button>
+                            <button onclick="toggleDakuten()" class="key-btn bg-amber-50 hover:bg-amber-100 p-2 rounded border border-amber-200 text-amber-900 active:bg-amber-200">濁点゛</button>
+                        </div>
+
+                        <!-- Action Controls (1文字削除・一括クリア) -->
+                        <div class="flex gap-2 pt-1">
+                            <button onclick="clearKey()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-lg text-xs transition">
+                                クリア
+                            </button>
+                            <button onclick="backspaceKey()" class="w-1/2 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-delete-left"></i> 1文字消す
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Explanation Box (Shown after selection) -->
@@ -352,7 +422,51 @@
 
         <!-- ================= DASHBOARD MODE ================= -->
         <section id="sec-dashboard" class="hidden space-y-6">
-            <!-- ... existing dashboard content ... -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex items-center gap-3 border-b pb-4 border-slate-100">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-slate-800 text-lg">学習進捗ダッシュボード</h2>
+                        <p class="text-xs text-slate-500">現在の習得状況と達成度を確認できます</p>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">総単語数</span>
+                        <span id="dash-total-count" class="text-2xl font-extrabold text-slate-800">50</span>
+                        <span class="text-xs text-slate-400"> 語</span>
+                    </div>
+                    <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-center">
+                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider block mb-1">習得済み</span>
+                        <span id="dash-learned-count" class="text-2xl font-extrabold text-emerald-600">0</span>
+                        <span class="text-xs text-emerald-500"> 語</span>
+                    </div>
+                    <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-center">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-1">進捗率</span>
+                        <span id="dash-progress-percent" class="text-2xl font-extrabold text-indigo-600">0%</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center text-xs font-bold">
+                        <span class="text-slate-600">全体の進捗</span>
+                        <span id="dash-bar-text" class="text-indigo-600">0 / 50 習得</span>
+                    </div>
+                    <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden border border-slate-200">
+                        <div id="dash-progress-bar" class="bg-indigo-600 h-full duration-500 transition-all rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button onclick="startReviewUnlearned()" class="w-full bg-amber-500 hover:bg-amber-600 text-indigo-950 font-bold py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-repeat"></i> 未習得単語を集中復習する
+                </button>
+            </div>
         </section>
 
         <!-- ================= ACCOUNT & CLOUD SYNC MODE ================= -->
@@ -639,48 +753,54 @@
                 try {
                     vocabList = JSON.parse(saved);
                 } catch(e) {
-                    vocabList = JSON.parse(JSON.stringify(DEFAULT_VOCAB));
+                    vocabList = [...DEFAULT_VOCAB];
                 }
             } else {
-                vocabList = JSON.parse(JSON.stringify(DEFAULT_VOCAB));
+                vocabList = [...DEFAULT_VOCAB];
             }
         }
 
-        function saveVocabData() {
-            localStorage.setItem('kobun_vocab_51_100_v5', JSON.stringify(vocabList));
-            updateDashboard();
-        }
-
         function loadNewsData() {
-            const saved = localStorage.getItem('kobun_news_data_v3');
+            const saved = localStorage.getItem('kobun_news_v1');
             if (saved) {
                 try {
                     newsList = JSON.parse(saved);
                 } catch(e) {
-                    newsList = JSON.parse(JSON.stringify(DEFAULT_NEWS));
+                    newsList = [...DEFAULT_NEWS];
                 }
             } else {
-                newsList = JSON.parse(JSON.stringify(DEFAULT_NEWS));
+                newsList = [...DEFAULT_NEWS];
             }
         }
 
+        window.saveVocabData = function(shouldSyncCloud = true) {
+            localStorage.setItem('kobun_vocab_51_100_v5', JSON.stringify(vocabList));
+            updateDashboard();
+        };
+
         function saveNewsData() {
-            localStorage.setItem('kobun_news_data_v3', JSON.stringify(newsList));
+            localStorage.setItem('kobun_news_v1', JSON.stringify(newsList));
             renderNews();
         }
 
+        // Reset Data
         document.getElementById('resetDataBtn').addEventListener('click', () => {
-            vocabList = JSON.parse(JSON.stringify(DEFAULT_VOCAB));
-            newsList = JSON.parse(JSON.stringify(DEFAULT_NEWS));
-            saveVocabData();
-            saveNewsData();
-            filterCards();
-            renderTable();
-            showMessage('アプリデータを初期化しました');
+            if (confirm("データを初期化しますか？")) {
+                localStorage.removeItem('kobun_vocab_51_100_v5');
+                localStorage.removeItem('kobun_news_v1');
+                vocabList = [...DEFAULT_VOCAB];
+                newsList = [...DEFAULT_NEWS];
+                saveVocabData(false);
+                saveNewsData();
+                updateFilteredCards();
+                renderFlashcard();
+                renderTable();
+                showMessage("データを初期化しました");
+            }
         });
 
         // Navigation Tab Switch
-        function switchTab(tabName) {
+        window.switchTab = function(tabName) {
             ['flashcard', 'quiz', 'news', 'list', 'dashboard', 'account'].forEach(t => {
                 const sec = document.getElementById(`sec-${t}`);
                 if (sec) sec.classList.add('hidden');
@@ -702,7 +822,47 @@
             if (tabName === 'dashboard') updateDashboard();
             if (tabName === 'list') renderTable();
             if (tabName === 'news') renderNews();
-        }
+        };
+
+        // On-Screen Keypad Functions
+        window.pressKey = function(char) {
+            const input = document.getElementById('quizTextInput');
+            if (input.disabled) return;
+            input.value += char;
+        };
+
+        window.backspaceKey = function() {
+            const input = document.getElementById('quizTextInput');
+            if (input.disabled) return;
+            input.value = input.value.slice(0, -1);
+        };
+
+        window.clearKey = function() {
+            const input = document.getElementById('quizTextInput');
+            if (input.disabled) return;
+            input.value = '';
+        };
+
+        window.toggleDakuten = function() {
+            const input = document.getElementById('quizTextInput');
+            if (input.disabled || !input.value) return;
+            
+            const dakutenMap = {
+                'か':'が', 'き':'ぎ', 'く':'ぐ', 'け':'げ', 'こ':'ご',
+                'さ':'ざ', 'し':'じ', 'す':'ず', 'せ':'ぜ', 'そ':'ぞ',
+                'た':'だ', 'ち':'ぢ', 'つ':'づ', 'て':'で', 'と':'ど',
+                'は':'ば', 'ひ':'び', 'ふ':'ぶ', 'へ':'べ', 'ほ':'ぼ',
+                'が':'か', 'ぎ':'き', 'ぐ':'く', 'げ':'け', 'ご':'こ',
+                'ざ':'さ', 'じ':'し', 'ず':'す', 'ぜ':'せ', 'ぞ':'そ',
+                'だ':'た', 'ぢ':'ち', 'づ':'つ', 'で':'て', 'ど':'と',
+                'ば':'は', 'び':'ひ', 'ぶ':'ふ', 'べ':'へ', 'ぼ':'ほ'
+            };
+
+            const lastChar = input.value.slice(-1);
+            if (dakutenMap[lastChar]) {
+                input.value = input.value.slice(0, -1) + dakutenMap[lastChar];
+            }
+        };
 
         // News Logic & Render
         function renderNews() {
@@ -732,7 +892,7 @@
             });
         }
 
-        function openNewsAdminModal() {
+        window.openNewsAdminModal = function() {
             const pwd = prompt("管理者パスワードを入力してください");
             if (pwd === "1234") {
                 document.getElementById('newsModalTitle').innerText = "お知らせの新規投稿";
@@ -743,9 +903,9 @@
             } else if (pwd !== null) {
                 alert("パスワードが違います");
             }
-        }
+        };
 
-        function editNewsItem(id) {
+        window.editNewsItem = function(id) {
             const item = newsList.find(n => n.id === id);
             if (!item) return;
 
@@ -759,16 +919,16 @@
             } else if (pwd !== null) {
                 alert("パスワードが違います");
             }
-        }
+        };
 
-        function closeNewsAdminModal() {
+        window.closeNewsAdminModal = function() {
             document.getElementById('newsAdminModal').classList.add('hidden');
             document.getElementById('editingNewsId').value = "";
             document.getElementById('newsTitleInput').value = "";
             document.getElementById('newsContentInput').value = "";
-        }
+        };
 
-        function saveNewPost() {
+        window.saveNewPost = function() {
             const title = document.getElementById('newsTitleInput').value.trim();
             const content = document.getElementById('newsContentInput').value.trim();
             const editingId = document.getElementById('editingNewsId').value;
@@ -803,9 +963,9 @@
             }
 
             closeNewsAdminModal();
-        }
+        };
 
-        function deleteNewsItem(id) {
+        window.deleteNewsItem = function(id) {
             const pwd = prompt("削除用のパスワードを入力してください");
             if (pwd === "1234") {
                 newsList = newsList.filter(n => n.id !== id);
@@ -814,15 +974,15 @@
             } else if (pwd !== null) {
                 alert("パスワードが違います");
             }
-        }
+        };
 
         // Flashcard Filtering & Rendering
-        function filterCards() {
+        window.filterCards = function() {
             updateFilteredCards();
             currentCardIndex = 0;
             if (isCardFlipped) flipCard();
             renderFlashcard();
-        }
+        };
 
         function updateFilteredCards() {
             const filter = document.getElementById('cardFilter').value;
@@ -871,7 +1031,7 @@
             }
         }
 
-        function flipCard() {
+        window.flipCard = function() {
             const card = document.getElementById('flashcard');
             isCardFlipped = !isCardFlipped;
             if (isCardFlipped) {
@@ -879,37 +1039,37 @@
             } else {
                 card.classList.remove('rotate-y-180');
             }
-        }
+        };
 
-        function nextCard() {
+        window.nextCard = function() {
             if (filteredIndices.length === 0) return;
             if (isCardFlipped) flipCard();
             setTimeout(() => {
                 currentCardIndex = (currentCardIndex + 1) % filteredIndices.length;
                 renderFlashcard();
             }, isCardFlipped ? 200 : 0);
-        }
+        };
 
-        function prevCard() {
+        window.prevCard = function() {
             if (filteredIndices.length === 0) return;
             if (isCardFlipped) flipCard();
             setTimeout(() => {
                 currentCardIndex = (currentCardIndex - 1 + filteredIndices.length) % filteredIndices.length;
                 renderFlashcard();
             }, isCardFlipped ? 200 : 0);
-        }
+        };
 
-        function toggleLearnedCurrent() {
+        window.toggleLearnedCurrent = function() {
             if (filteredIndices.length === 0) return;
             const targetIndex = filteredIndices[currentCardIndex];
             vocabList[targetIndex].learned = !vocabList[targetIndex].learned;
             saveVocabData();
             renderFlashcard();
             showMessage(vocabList[targetIndex].learned ? '習得済みに設定しました' : '未習得に戻しました');
-        }
+        };
 
         // Voice Reader
-        function speakText(event) {
+        window.speakText = function(event) {
             event.stopPropagation();
             if (filteredIndices.length === 0) return;
             const item = vocabList[filteredIndices[currentCardIndex]];
@@ -922,7 +1082,7 @@
             } else {
                 showMessage('お使いの環境は音声読み上げ非対応です');
             }
-        }
+        };
 
         // Helper to mask word in sentence for Fill-in-the-blank quiz
         function maskExampleSentence(sentence, targetWord) {
@@ -949,7 +1109,7 @@
         }
 
         // Quiz Logic
-        function startQuiz() {
+        window.startQuiz = function() {
             const type = document.querySelector('input[name="quizType"]:checked').value;
             const count = parseInt(document.getElementById('quizCount').value);
 
@@ -975,7 +1135,7 @@
             document.getElementById('quiz-active-box').classList.remove('hidden');
 
             renderQuizQuestion();
-        }
+        };
 
         function renderQuizQuestion() {
             const q = quizQuestions[quizCurrentIdx];
@@ -1063,7 +1223,7 @@
         }
 
         // Input answer submission for 記述入力
-        function submitInputAnswer() {
+        window.submitInputAnswer = function() {
             const q = quizQuestions[quizCurrentIdx];
             const correct = q.target;
             const inputEl = document.getElementById('quizTextInput');
@@ -1094,7 +1254,7 @@
             inputDisplay.classList.remove('hidden');
 
             showQuizExplanation(isCorrect, correct);
-        }
+        };
 
         function showQuizExplanation(isCorrect, correct) {
             const expBox = document.getElementById('quiz-explanation');
@@ -1129,14 +1289,14 @@
             }, 100);
         }
 
-        function nextQuizQuestion() {
+        window.nextQuizQuestion = function() {
             quizCurrentIdx++;
             if (quizCurrentIdx < quizQuestions.length) {
                 renderQuizQuestion();
             } else {
                 showQuizResults();
             }
-        }
+        };
 
         function showQuizResults() {
             document.getElementById('quiz-active-box').classList.add('hidden');
@@ -1147,13 +1307,13 @@
             document.getElementById('final-percentage').innerText = `正解率 ${pct}%`;
         }
 
-        function resetQuizView() {
+        window.resetQuizView = function() {
             document.getElementById('quiz-result-box').classList.add('hidden');
             document.getElementById('quiz-start-box').classList.remove('hidden');
-        }
+        };
 
         // Table List Rendering
-        function renderTable() {
+        window.renderTable = function() {
             const tbody = document.getElementById('vocabTableBody');
             const search = document.getElementById('searchInput').value.toLowerCase();
             tbody.innerHTML = '';
@@ -1188,16 +1348,16 @@
                 `;
                 tbody.appendChild(tr);
             });
-        }
+        };
 
-        function toggleLearnedInList(id) {
+        window.toggleLearnedInList = function(id) {
             const idx = vocabList.findIndex(v => v.id === id);
             if (idx !== -1) {
                 vocabList[idx].learned = !vocabList[idx].learned;
                 saveVocabData();
                 renderTable();
             }
-        }
+        };
 
         // Dashboard Progress Logic
         function updateDashboard() {
@@ -1205,18 +1365,24 @@
             const learned = vocabList.filter(v => v.learned).length;
             const pct = total > 0 ? Math.round((learned / total) * 100) : 0;
 
-            document.getElementById('dash-total-count').innerText = total;
-            document.getElementById('dash-learned-count').innerText = learned;
-            document.getElementById('dash-progress-percent').innerText = `${pct}%`;
-            document.getElementById('dash-bar-text').innerText = `${learned} / ${total} 習得`;
-            document.getElementById('dash-progress-bar').style.width = `${pct}%`;
+            const totalEl = document.getElementById('dash-total-count');
+            const learnedEl = document.getElementById('dash-learned-count');
+            const pctEl = document.getElementById('dash-progress-percent');
+            const barTextEl = document.getElementById('dash-bar-text');
+            const barEl = document.getElementById('dash-progress-bar');
+
+            if (totalEl) totalEl.innerText = total;
+            if (learnedEl) learnedEl.innerText = learned;
+            if (pctEl) pctEl.innerText = `${pct}%`;
+            if (barTextEl) barTextEl.innerText = `${learned} / ${total} 習得`;
+            if (barEl) barEl.style.width = `${pct}%`;
         }
 
-        function startReviewUnlearned() {
+        window.startReviewUnlearned = function() {
             document.getElementById('cardFilter').value = 'unlearned';
             switchTab('flashcard');
             filterCards();
-        }
+        };
     </script>
 </body>
 </html>
