@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>解法古文単語350 (No.51-100) 暗記アプリ</title>
+    <title>解法古文単語350 (No.51-140) 暗記アプリ</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for icons -->
@@ -57,7 +57,7 @@
                 <div class="bg-amber-500 text-indigo-950 font-bold px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg text-xs md:text-sm tracking-wider">
                     古文単語
                 </div>
-                <h1 class="font-serif-jp text-base md:text-xl font-bold tracking-wide">解法古文単語350 <span class="text-amber-400 text-xs md:text-base font-sans font-normal">(No.51-100)</span></h1>
+                <h1 class="font-serif-jp text-base md:text-xl font-bold tracking-wide">解法古文単語350 <span class="text-amber-400 text-xs md:text-base font-sans font-normal">(No.51-140)</span></h1>
             </div>
             <div class="flex items-center gap-2">
                 <!-- Google Form Link Button -->
@@ -87,6 +87,9 @@
             <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
                 <i class="fa-solid fa-chart-pie"></i> 学習状況
             </button>
+            <button onclick="switchTab('account')" id="tab-account" class="tab-btn py-2.5 px-3 font-medium flex items-center gap-1.5 border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+                <i class="fa-solid fa-arrows-rotate"></i> データ同期
+            </button>
         </div>
     </header>
 
@@ -105,9 +108,11 @@
                 <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
                     <label class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">表示対象:</label>
                     <select id="cardFilter" onchange="onCardFilterChange()" class="bg-slate-100 border border-slate-300 rounded-lg text-sm px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none w-full sm:w-auto">
-                        <option value="all">全50語 (No.51 - 100)</option>
-                        <option value="part1">前半 (No.51 - 75)</option>
-                        <option value="part2">後半 (No.76 - 100)</option>
+                        <option value="all">全90語 (No.51 - 140)</option>
+                        <option value="part1">No.51 - 75</option>
+                        <option value="part2">No.76 - 100</option>
+                        <option value="part3">No.101 - 120</option>
+                        <option value="part4">No.121 - 140</option>
                         <option value="custom">番号を範囲指定</option>
                         <option value="unlearned">未習得・要復習のみ</option>
                         <option value="learned">習得済みのみ</option>
@@ -115,14 +120,14 @@
 
                     <!-- Custom Range Inputs (Cards) -->
                     <div id="cardCustomRangeBox" class="hidden flex items-center gap-1.5 text-xs">
-                        <input type="number" id="cardStartNo" min="51" max="100" value="51" class="w-16 bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-center font-bold">
+                        <input type="number" id="cardStartNo" min="51" max="140" value="51" class="w-16 bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-center font-bold">
                         <span>〜</span>
-                        <input type="number" id="cardEndNo" min="51" max="100" value="70" class="w-16 bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-center font-bold">
+                        <input type="number" id="cardEndNo" min="51" max="140" value="100" class="w-16 bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-center font-bold">
                         <button onclick="filterCards()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-lg transition">適用</button>
                     </div>
                 </div>
                 <div class="text-xs text-slate-500 font-medium w-full md:w-auto text-right" id="cardCounter">
-                    カード 1 / 50
+                    カード 1 / 90
                 </div>
             </div>
 
@@ -148,7 +153,7 @@
                     </div>
 
                     <!-- Back Side -->
-                    <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-2xl bg-white p-6 flex flex-col justify-between border-2 border-indigo-200">
+                    <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-2xl bg-white p-6 flex flex-col justify-between border-2 border-indigo-200 overflow-y-auto">
                         <div class="flex justify-between items-center border-b pb-2 border-slate-100">
                             <span id="card-id-back" class="text-xs font-bold text-indigo-600">No.51</span>
                             <span class="text-xs text-slate-400">現代語訳・解説</span>
@@ -156,7 +161,7 @@
                         <div class="my-auto space-y-3">
                             <div>
                                 <span class="text-xs font-bold text-amber-600 uppercase tracking-wider block mb-1">【主な現代語訳】</span>
-                                <p id="card-meaning" class="text-lg md:text-xl font-bold text-slate-800">現代語訳がここに入ります</p>
+                                <p id="card-meaning" class="text-base md:text-lg font-bold text-slate-800 whitespace-pre-line leading-relaxed">現代語訳がここに入ります</p>
                             </div>
                             <div id="card-hint-box" class="bg-slate-50 p-2.5 rounded-lg text-xs text-slate-600 border border-slate-100">
                                 <span class="font-bold text-indigo-700">💡 ニュアンス・解法ポイント:</span>
@@ -166,7 +171,7 @@
                                 <p id="card-example">例文がここに入ります</p>
                             </div>
                         </div>
-                        <div class="text-xs text-slate-400 text-center">
+                        <div class="text-xs text-slate-400 text-center pt-2">
                             <i class="fa-solid fa-rotate"></i> タップ／クリックして表面に戻る
                         </div>
                     </div>
@@ -208,9 +213,11 @@
                     <div class="space-y-2">
                         <label class="block text-xs font-bold text-slate-600">出題範囲</label>
                         <select id="quizRangeSelect" onchange="toggleQuizCustomRange()" class="w-full bg-slate-100 border border-slate-300 rounded-xl text-sm p-2.5 font-medium outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="all">全範囲 (No.51〜100)</option>
-                            <option value="part1">前半 (No.51〜75)</option>
-                            <option value="part2">後半 (No.76〜100)</option>
+                            <option value="all">全範囲 (No.51〜140)</option>
+                            <option value="part1">No.51〜75</option>
+                            <option value="part2">No.76〜100</option>
+                            <option value="part3">No.101〜120</option>
+                            <option value="part4">No.121〜140</option>
                             <option value="custom">番号を指定して出題</option>
                             <option value="unlearned">未習得・要復習のみ</option>
                         </select>
@@ -218,9 +225,9 @@
                         <!-- Custom Range Inputs (Quiz) -->
                         <div id="quizCustomRangeBox" class="hidden flex items-center justify-center gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
                             <span class="font-bold text-slate-600">No.</span>
-                            <input type="number" id="quizStartNo" min="51" max="100" value="51" class="w-20 bg-white border border-slate-300 rounded-lg p-2 text-center font-bold text-sm">
+                            <input type="number" id="quizStartNo" min="51" max="140" value="51" class="w-20 bg-white border border-slate-300 rounded-lg p-2 text-center font-bold text-sm">
                             <span class="font-bold text-slate-600">〜</span>
-                            <input type="number" id="quizEndNo" min="51" max="100" value="70" class="w-20 bg-white border border-slate-300 rounded-lg p-2 text-center font-bold text-sm">
+                            <input type="number" id="quizEndNo" min="51" max="140" value="100" class="w-20 bg-white border border-slate-300 rounded-lg p-2 text-center font-bold text-sm">
                         </div>
                     </div>
 
@@ -241,11 +248,15 @@
                             </label>
                             <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
                                 <input type="radio" name="quizType" value="input" class="text-indigo-600">
-                                <span class="text-xs font-medium">記述：キーボード入力（意味 ➔ 単語）</span>
+                                <span class="text-xs font-medium">記述：入力（現代語訳 ➔ 単語）</span>
+                            </label>
+                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50 bg-amber-50/50 border-amber-200">
+                                <input type="radio" name="quizType" value="input_k2m" class="text-indigo-600">
+                                <span class="text-xs font-bold text-indigo-900">新登場：記述（単語 ➔ 現代語訳・意味）</span>
                             </label>
                             <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-50">
                                 <input type="radio" name="quizType" value="input_example" class="text-indigo-600">
-                                <span class="text-xs font-medium">記述：キーボード入力（例文穴埋め）</span>
+                                <span class="text-xs font-medium">記述：入力（例文穴埋め）</span>
                             </label>
                         </div>
                     </div>
@@ -255,7 +266,8 @@
                         <select id="quizCount" class="w-full bg-slate-100 border border-slate-300 rounded-xl text-sm p-2.5 font-medium outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="10">10問</option>
                             <option value="20">20問</option>
-                            <option value="50">全50問</option>
+                            <option value="50">50問</option>
+                            <option value="90">全90問</option>
                         </select>
                     </div>
                 </div>
@@ -288,7 +300,7 @@
                 <!-- Keyboard Input Field (For Input Modes) -->
                 <div id="quiz-input-container" class="hidden space-y-4">
                     <div class="flex gap-2">
-                        <input type="text" id="quizTextInput" placeholder="ひらがなで入力..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-base font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+                        <input type="text" id="quizTextInput" placeholder="入力..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-base font-bold outline-none focus:ring-2 focus:ring-indigo-500">
                         <button id="quizInputSubmitBtn" onclick="submitInputAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl transition whitespace-nowrap text-sm">
                             回答
                         </button>
@@ -296,7 +308,7 @@
 
                     <!-- Custom Japanese On-Screen Keypad -->
                     <div id="virtual-keyboard" class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
-                        <div class="text-[11px] font-bold text-slate-500 text-center mb-1">画面キーボード（予測変換なし）</div>
+                        <div class="text-[11px] font-bold text-slate-500 text-center mb-1">画面キーボード（ひらがな入力補助）</div>
                         
                         <!-- 50音 Grid -->
                         <div class="grid grid-cols-10 gap-1 text-center text-xs font-bold text-slate-700">
@@ -429,7 +441,7 @@
                     <input type="text" id="searchInput" oninput="renderTable()" placeholder="単語・読み・現代語訳で検索..." class="w-full pl-9 pr-3 py-2 bg-slate-100 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
                 </div>
                 <div class="text-xs text-slate-500">
-                    全 <span id="list-count" class="font-bold text-indigo-600">50</span> 語中を表示
+                    全 <span id="list-count" class="font-bold text-indigo-600">90</span> 語中を表示
                 </div>
             </div>
 
@@ -470,7 +482,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
                         <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">総単語数</span>
-                        <span id="dash-total-count" class="text-2xl font-extrabold text-slate-800">50</span>
+                        <span id="dash-total-count" class="text-2xl font-extrabold text-slate-800">90</span>
                         <span class="text-xs text-slate-400"> 語</span>
                     </div>
                     <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-center">
@@ -488,7 +500,7 @@
                 <div class="space-y-2">
                     <div class="flex justify-between items-center text-xs font-bold">
                         <span class="text-slate-600">全体の進捗</span>
-                        <span id="dash-bar-text" class="text-indigo-600">0 / 50 習得</span>
+                        <span id="dash-bar-text" class="text-indigo-600">0 / 90 習得</span>
                     </div>
                     <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden border border-slate-200">
                         <div id="dash-progress-bar" class="bg-indigo-600 h-full duration-500 transition-all rounded-full" style="width: 0%"></div>
@@ -553,7 +565,7 @@
             <div class="space-y-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">タイトル</label>
-                    <input type="text" id="newsTitleInput" placeholder="例：🎉 お知らせページを追加！" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <input type="text" id="newsTitleInput" placeholder="例：🎉 単語No.101〜140を追加！" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">お知らせ本文</label>
@@ -569,7 +581,7 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
-        解法古文単語350 (No.51 - 100) 完全対応暗記アプリ
+        解法古文単語350 (No.51 - 140) 完全対応暗記アプリ
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
@@ -665,7 +677,7 @@
         // Hook sync into local save function
         const originalSaveVocabData = window.saveVocabData;
         window.saveVocabData = function(shouldSyncCloud = true) {
-            localStorage.setItem('kobun_vocab_51_100_v5', JSON.stringify(vocabList));
+            localStorage.setItem('kobun_vocab_51_140_v9', JSON.stringify(vocabList));
             updateDashboard();
             if (shouldSyncCloud) {
                 syncToCloud();
@@ -680,62 +692,105 @@
 
     <script>
         const DEFAULT_VOCAB = [
-            { id: 51, word: "つきづきし", reading: "つきづきし", meaning: "①似つかわしい・ふさわしい", origin: "「似つかわしい・しっくり合っている」意味。「ピッタリ！」と対象に合わせて訳す。", example: "霜のいと白きも、またさらでも、いと寒きに、火など急ぎおこして、炭持て渡るも、いとつきづきし。", learned: false },
-            { id: 52, word: "あさまし", reading: "あさまし", meaning: "①驚いたことだ ②あきれたことだ・情けない", origin: "語源は「あさむ（驚く）」。口をアングリ開けてしまうような意外な驚き・呆れ。", example: "かかる人の、撰集承りておはするは、あさましきことかな。", learned: false },
-            { id: 53, word: "いとほし", reading: "いとほし", meaning: "①気の毒だ・かわいそうだ ②かわいい", origin: "他人に同情して気の毒がる。または愛おしく可愛い様子。", example: "身に打せむこといとほしくおぼえ頂ければ、え打たせで置きつ。", learned: false },
-            { id: 54, word: "ゆかし", reading: "ゆかし", meaning: "①行きたい・見たい・聞きたい・知りたい ②心ひかれる", origin: "「行きたい」が語源。知りたい・見たいと心が強く惹かれる様子。", example: "いかなる人の、かく弾き奏づるならむと、わりなくゆかしけれど...", learned: false },
-            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている ②身分が高い・教養がある", origin: "絶対的評価を表す語で最高。「よい」や身分・教養の高さを表す。", example: "中ごろは、よき人々、市に行きてなむ買ひ給ひける。", learned: false },
-            { id: 56, word: "よろし", reading: "よろし", meaning: "①悪くない ②普通だ・ありふれている", origin: "相対的評価を表す語。「悪くはない」「まあまあだ」。", example: "春ごとに咲くとて、桜をよろしう思ふ人やはある。", learned: false },
-            { id: 57, word: "わろし", reading: "わろし", meaning: "①相対的に悪い・よくない", origin: "相対的評価を表す語で「よくない」。", example: "九月ばかりのころ、このころ鳥のあぢはひ、わろし。", learned: false },
-            { id: 58, word: "あし", reading: "あし", meaning: "①絶対的に悪い", origin: "絶対的評価を表す語で最低。「あしき（悪い）」の対義語は「よし」。", example: "わが子をしも、かく情けなく罷むは、いとあしきことなり。", learned: false },
-            { id: 59, word: "かひなし", reading: "かいなし", meaning: "①無駄だ・甲斐がない ②どうしようもない", origin: "甲斐（効果・価値）が無い。「かひ（代ひ・交ふ）」から生まれた言葉。", example: "泣き顔作り、けしき気にせど、いとかひなし。", learned: false },
-            { id: 60, word: "いはけなし", reading: "いわけなし", meaning: "①幼い", origin: "「いはけ」＋「なし（接尾語）」。幼く、無心で可愛らしい様子。", example: "いはけなきほどより、学問に心を入れて侍りしに...", learned: false },
-            { id: 61, word: "なつかし", reading: "なつかし", meaning: "①心ひかれる・好ましい", origin: "動詞「懐く」を形容詞化した語で「親しみが持てる・惹きつけられる」。", example: "花橘の香のなつかしきに、ほととぎすの鳴くを...", learned: false },
-            { id: 62, word: "あはれなり", reading: "あわれなり", meaning: "①しみじみと趣深い ②しみじみと悲しい ③愛おしい", origin: "「あぁ、はれ」という感嘆詞が語源。文脈に応じて＋/ーをチェック。", example: "月のいと明きに、差しいでたる雲の細き、いとあはれなり。", learned: false },
-            { id: 63, word: "おろかなり", reading: "おろかなり", meaning: "①おろそかだ・いい加減だ ②愚かだ", origin: "行動や心にスキが多くバラバラな感じ。「いい加減だ」という意味で頻出。", example: "帝の御敵を、いかでかおろかにせむ。", learned: false },
-            { id: 64, word: "をこなり", reading: "おこなり", meaning: "①愚かだ・愚かしい", origin: "「をこ（烏滸・愚か者）」から。「愚かだ」「バカバカしい」の意。", example: "をこなる者の、文を書きて人に送るやうに...", learned: false },
-            { id: 65, word: "あてなり", reading: "あてなり", meaning: "①高貴だ ②上品だ・優雅だ", origin: "「貴」＝「高貴だ・上品だ」。品があって美しく洗練されている様子。", example: "あてなる女の尼になりて、世の中を思ひひらむ...", learned: false },
-            { id: 66, word: "いたづらなり", reading: "いたずらなり", meaning: "①無駄だ・無益だ ②ひまだ", origin: "「いたづら（徒ら）」＝何の効果もなく無駄なこと。「むなしい」。", example: "この庭のいたづらに広きこと、あさましく、あるべからぬことなり。", learned: false },
-            { id: 67, word: "せちなり", reading: "せちなり", meaning: "①切実だ ②大切だ", origin: "「切に」の形でも多用される。感情が痛切にこみ上げる様・ひたすらな様。", example: "七月十五日の月に押し出て、せちに物思へる気色なり。", learned: false },
-            { id: 68, word: "あながちなり", reading: "あながちなり", meaning: "①強引だ ②筋が通らない・身勝手だ ③【下に打ち消しで】必ずしも（〜ない）", origin: "漢字「強」から「強引・強硬・無茶苦茶」のイメージ。", example: "桜の散るを、あながちに怨み奉るべきにもあらざれど...", learned: false },
-            { id: 69, word: "みそかに", reading: "みそかに", meaning: "①【人目を忍んで】ひそかに・こっそり", origin: "「みそか」は密か。人目を忍んでひそかに行動する様子。", example: "親しき人のもとへ行き通ひけるほどに、奴を思ひかけて、みそかに通ひにけり。", learned: false },
-            { id: 70, word: "つれづれなり", reading: "つれづれなり", meaning: "①退屈だ・手持ちぶさだが ②物寂しい", origin: "「連れ＋連れ」。やるべき事がなく退屈でつくづく寂しい状態。", example: "雨いたう降りてつれづれなりとて、殿上人、上の御局にて碁打ちあそび給ふ。", learned: false },
-            { id: 71, word: "かげ", reading: "かげ", meaning: "①光 ②姿・面影 ③影", origin: "「光」を表すのが最重要（月のかげ・日のかげなど）。", example: "板閣より漏り来る月の影のみぞ、実に変らぬ昔の光なりける。", learned: false },
-            { id: 72, word: "つとめて", reading: "つとめて", meaning: "①早朝 ②翌朝", origin: "「つと」は早いという意味。「翌朝」または「早朝」の意。", example: "十五日のつとめては、深草の法華堂にお参りしたるに...", learned: false },
-            { id: 73, word: "かたち", reading: "かたち", meaning: "①容貌・顔立ち", origin: "顔立ちや容姿を表す。現代の「体型・形状」とは異なり顔中心。", example: "まみつき、いと愛敬づき、はなやかなるかたちなり。", learned: false },
-            { id: 74, word: "けしき", reading: "けしき", meaning: "①様子・風情 ②機嫌・意向 ③顔色・表情", origin: "「気色」。外から見てわかる人の様子・表情や自然の様子。", example: "今日、風雲のけしきはいとはだ悪しと語りて...", learned: false },
-            { id: 75, word: "せうそこ", reading: "しょうそこ", meaning: "①訪問して来意を告げること・挨拶すること ②手紙（を書くこと）", origin: "「消息」。連絡を取る・挨拶訪問する・手紙を送る。", example: "いづれ、御消息聞こえむ。", learned: false },
-            { id: 76, word: "うつつ", reading: "うつつ", meaning: "①現実 ②正気", origin: "「現」。夢と対比される現実世界、または意識がはっきりした正気の状態。", example: "夢かとおもふ心と現実とおぼゆ。", learned: false },
-            { id: 77, word: "こと", reading: "こと", meaning: "①言葉 ②和歌 ③事柄・事実", origin: "漢字「言」または「事」。文脈により「言葉・和歌」か「出来事」かを判別する。", example: "言の葉を重ねても、思ふ心を尽くしがたし。", learned: false },
-            { id: 78, word: "としごろ", reading: "としごろ", meaning: "①長年・数年来", origin: "「年頃」。数年の間、長年にわたって。", example: "としごろ思ひつる事、果たし侍りぬ。", learned: false },
-            { id: 79, word: "ひごろ", reading: "ひごろ", meaning: "①数日来・ここ数日 ②普段・日頃", origin: "「日頃」。ここ数日の間、または日ごろ日常的に。", example: "ひごろ訪ね聞こえざりつるは、障る事ありて...", learned: false },
-            { id: 80, word: "おほやけ", reading: "おおやけ", meaning: "①公的なこと ②朝廷・幕府 ③帝・天皇", origin: "私に対する「公（おおやけ）」、朝廷や帝を表す最高重要語。", example: "おほやけの御使ひとして、東国へ下り給ふ。", learned: false },
-            { id: 81, word: "うち", reading: "うち", meaning: "①宮中・内裏 ②帝・天皇", origin: "「内」。雲の上の内裏・宮中や帝ご自身を表す。", example: "うちへ参り給ひて、御前におはします。", learned: false },
-            { id: 82, word: "なさけ", reading: "なさけ", meaning: "①思いやり ②風流心・情緒", origin: "「情け」。人に対する思いやりの心、および自然や風流を解する心。", example: "なさけある人の心には、いと哀れにおぼゆべし。", learned: false },
-            { id: 83, word: "て", reading: "て", meaning: "①文字・筆跡 ②演奏法・曲", origin: "「手」。手から生み出される「文字・筆跡」や、楽器の「演奏法・曲」を表す。", example: "ていとあやしく書きて、人に取らせ給ふ。", learned: false },
-            { id: 84, word: "よ・よのなか", reading: "よ・よのなか", meaning: "①男女の仲・夫婦関係 ②世間・社会", origin: "「世・世の中」。平安時代の最大の関心事である「男女の仲」を表す重要語。", example: "よのなかを思い嘆く、二人のかたらひ。", learned: false },
-            { id: 85, word: "あいぎやう", reading: "あいぎょう", meaning: "①かわいらしさ・愛嬌 ②思いやり", origin: "「愛敬」。人に愛されるような魅力や可愛らしさ、にこやかさ。", example: "あいぎやうこぼれるばかりにて、いと愛し。", learned: false },
-            { id: 86, word: "きは", reading: "きわ", meaning: "①身分・分限 ②端・限り", origin: "「際」。ものの境目や限界。転じて人の「身分・分限」を表す。", example: "貴きも賤しきもきはに従ひて、集まり給ふ。", learned: false },
-            { id: 87, word: "ほど", reading: "ほど", meaning: "①時間・ころ ②身分・段階 ③程度", origin: "「程」。時間・空間・程度などの「あいだ・範囲」。人間の身分も表す。", example: "出で給ふほどに、夜も明けぬ。", learned: false },
-            { id: 88, word: "やがて", reading: "やがて", meaning: "①そのまま ②すぐに・直ちに", origin: "「そのまま（状態の継続）」と「すぐに（時間の連続）」の2大意味をマスター。", example: "やがて起きもあがらで、伏し給へり。", learned: false },
-            { id: 89, word: "すなはち", reading: "すなわち", meaning: "①すぐに・即座に", origin: "「即ち」。間を置かずに「すぐに・直ちに」動作を行う様子。", example: "すなはち立ちて出でぬ。", learned: false },
-            { id: 90, word: "なほ", reading: "なお", meaning: "①やはり ②いっそう・ますます", origin: "「直」。文脈によって「そうは言ってもやはり」か「さらに一層」かを判断。", example: "なほ言ひてむとて、立ち止まり給ふ。", learned: false },
-            { id: 91, word: "おのづから", reading: "おのずから", meaning: "①自然と・ひとりでに ②たまたま・偶然 ③【仮定で】万一・もしも", origin: "「自ら」。自然とそうなること。文頭の仮定文では「万一」と訳す。", example: "おのづから心得むと、念じ給ふ。", learned: false },
-            { id: 92, word: "なかなか", reading: "なかなか", meaning: "①かえって・むしろ ②中途半端に", origin: "「中々」。中途半端に行うくらいなら「むしろ〜の方がマシだ」というニュアンス。", example: "なかなか言はざるは、言うに勝れり。", learned: false },
-            { id: 93, word: "さすがに", reading: "さすがに", meaning: "①そうは言ってもやはり ②そうもいかない", origin: "「流石に」。否定的な事情を認めつつも「そうは言ってもやはり」と繋げる。", example: "さすがに恋しく、いと愛しく覚ゆ。", learned: false },
-            { id: 94, word: "あまた", reading: "あまた", meaning: "①たくさん・数多く", origin: "「数多」。数や数量が非常に多い様子を表す副詞。", example: "あまたの人が集まりて、夜を明かす。", learned: false },
-            { id: 95, word: "げに", reading: "げに", meaning: "①なるほど・本当に", origin: "「解に（実にある通り）」。相手の言葉にうなずき「なるほど、本当に」と同調する。", example: "げに美味なるものなり、言ひて笑ふ。", learned: false },
-            { id: 96, word: "いと・いとど", reading: "いと・いとど", meaning: "①たいそう・非常に ②【いとど】いよいよ・ますます", origin: "程度が甚だしい様。「いとど」は「ますます/いよいよ」と強調表現。", example: "いと美味しく、いとど愛しき心地す。", learned: false },
-            { id: 97, word: "やうやう", reading: "ようよう", meaning: "①だんだん・しだいに", origin: "「漸く」。時間の経過に伴って徐々に・次第に変化していく様子。", example: "やうやう白くなりゆく山際、少しあかりて...", learned: false },
-            { id: 98, word: "かづく", reading: "かづく", meaning: "①【被く】（褒美を）いただく ②（褒美を）与える", origin: "頭に被ることから「いただく（四段）」、被せることから「与える（下二段）」。", example: "衣をかづきてまかる。殿より禄をかづけ給ふ。", learned: false },
-            { id: 99, word: "いらふ", reading: "いらう", meaning: "①【答ふ・応ふ】答える・返事をする", origin: "呼びかけに対して応答する。名詞形は「いらへ（返事）」。", example: "呼び給へど、いらへもせずして去りぬ。", learned: false },
-            { id: 100, word: "さはる", reading: "さはる", meaning: "①【障る】差し支える・妨げられる", origin: "「障る」。進行や行動が障害によって邪魔される。名詞形は「さはり（障り・支障）」。", example: "いとわりなき雨にさはりて、参り給はず。", learned: false }
+            // --- 51 to 100 ---
+            { id: 51, word: "つきづきし", reading: "つきづきし", meaning: "①似つかわしい・ふさわしい", origin: "「似つかわしい・ふさわしい」意味。", example: "霜のいと白きも、またさらでも、いと寒きに、火など急ぎおこして、炭持て渡るも、いとつきづきし。", learned: false },
+            { id: 52, word: "あさまし", reading: "あさまし", meaning: "①驚いたことだ\n②あきれたことだ・情けない", origin: "語源「あさむ（驚く）」。驚きと呆れを表す。", example: "かかる人の、撰集承りておはするは、あさましきことかな。", learned: false },
+            { id: 53, word: "いとほし", reading: "いとほし", meaning: "①気の毒だ・かわいそうだ\n②かわいい", origin: "「気の毒だ」および「かわいい」の2大意味。", example: "身に打せむこといとほしくおぼえ頂ければ、え打たせで置きつ。", learned: false },
+            { id: 54, word: "ゆかし", reading: "ゆかし", meaning: "①行きたい・見たい・聞きたい・知りたい\n②心ひかれる", origin: "行きたいから派生して心惹かれること。", example: "いかなる人の、かく弾き奏づるならむと、わりなくゆかしけれど...", learned: false },
+            { id: 55, word: "よし", reading: "よし", meaning: "①よい・優れている\n②身分が高い・教養がある", origin: "絶対的評価。素晴らしいこと、高貴なこと。", example: "中ごろは、よき人々、市に行きてなむ買ひ給ひける。", learned: false },
+            { id: 56, word: "よろし", reading: "よろし", meaning: "①悪くない\n②普通だ・ありふれている", origin: "相対的評価。「悪くはない」「普通だ」。", example: "春ごとに咲くとて、桜をよろしう思ふ人やはある。", learned: false },
+            { id: 57, word: "わろし", reading: "わろし", meaning: "①よくない", origin: "相対的評価で「よくない」。", example: "九月ばかりのころ、このころ鳥のあぢはひ、わろし。", learned: false },
+            { id: 58, word: "あし", reading: "あし", meaning: "①悪い", origin: "絶対的評価で最低ランク「悪い」。", example: "わが子をしも、かく情けなく罷むは、いとあしきことなり。", learned: false },
+            { id: 59, word: "かひなし", reading: "かいなし", meaning: "①無駄だ・どうしようもない", origin: "「甲斐無し」。効き目や意味がない様。", example: "泣き顔作り、けしき気にせど、いとかひなし。", learned: false },
+            { id: 60, word: "いはけなし", reading: "いわけなし", meaning: "①幼い", origin: "幼くて可愛い様。", example: "いはけなきほどより、学問に心を入れて侍りしに...", learned: false },
+            { id: 61, word: "なつかし", reading: "なつかし", meaning: "①心ひかれる・好ましい", origin: "親しみが持てて心が惹きつけられる様子。", example: "花橘の香のなつかしきに、ほととぎすの鳴くを...", learned: false },
+            { id: 62, word: "あはれなり", reading: "あわれなり", meaning: "①しみじみと趣深い\n②しみじみと悲しい", origin: "感嘆詞「あぁ」から。趣深い・悲しい。", example: "月のいと明きに、差しいでたる雲の細き、いとあはれなり。", learned: false },
+            { id: 63, word: "おろかなり", reading: "おろかなり", meaning: "①おろそかだ・いい加減だ\n②愚かだ", origin: "スキが多くていい加減な状態。", example: "帝の御敵を、いかでかおろかにせむ。", learned: false },
+            { id: 64, word: "をこなり", reading: "おこなり", meaning: "①愚かだ", origin: "「をこ（烏滸）」＝愚か。", example: "をこなる者の、文を書きて人に送るやうに...", learned: false },
+            { id: 65, word: "あてなり", reading: "あてなり", meaning: "①高貴だ\n②上品だ・優雅だ", origin: "高貴で上品・洗練されている様子。", example: "あてなる女の尼になりて、世の中を思ひひらむ...", learned: false },
+            { id: 66, word: "いたづらなり", reading: "いたずらなり", meaning: "①無駄だ・無益だ\n②ひまだ", origin: "何の成果もなくむなしいこと。", example: "この庭のいたづらに広きこと、あさましく、あるべからぬことなり。", learned: false },
+            { id: 67, word: "せちなり", reading: "せちなり", meaning: "①切実だ\n②大切だ", origin: "痛切・切実な気持ち。", example: "七月十五日の月に押し出て、せちに物思へる気色なり。", learned: false },
+            { id: 68, word: "あながちなり", reading: "あながちなり", meaning: "①強引だ\n②筋が通らない・身勝手だ\n③（下に否定表現を伴って）必ずしも・決して\n④［連用形「あながちに」で］むやみに・しいて", origin: "「強引」「身勝手」が基本の意味。", example: "桜の散るを、あながちに怨み奉るべきにもあらざれど...", learned: false },
+            { id: 69, word: "みそかに", reading: "みそかに", meaning: "①（人目を忍んで）ひそかに・こっそり", origin: "人目を忍んで秘密で行う様。", example: "親しき人のもとへ行き通ひけるほどに、奴を思ひかけて、みそかに通ひにけり。", learned: false },
+            { id: 70, word: "つれづれなり", reading: "つれづれなり", meaning: "①退屈だ・手持ちぶさただ\n②物寂しい", origin: "退屈でつくづく寂しいこと。", example: "雨いたう降りてつれづれなりとて、殿上人、上の御局にて碁打ちあそび給ふ。", learned: false },
+            { id: 71, word: "かげ", reading: "かげ", meaning: "①光\n②姿・面影", origin: "「光」を表すのが最重要（月のかげ・日のかげなど）。", example: "板閣より漏り来る月の影のみぞ、実に変らぬ昔の光なりける。", learned: false },
+            { id: 72, word: "つとめて", reading: "つとめて", meaning: "①早朝\n②翌朝", origin: "早朝、または事があった翌朝。", example: "十五日のつとめては、深草の法華堂にお参りしたるに...", learned: false },
+            { id: 73, word: "かたち", reading: "かたち", meaning: "①容貌・顔立ち", origin: "顔立ちや容姿を表す。", example: "まみつき、いと愛敬づき、はなやかなるかたちなり。", learned: false },
+            { id: 74, word: "けしき", reading: "けしき", meaning: "①様子・風情\n②機嫌・意向\n③顔色・表情", origin: "気色。目に見える表情や様子。", example: "今日、風雲のけしきはいとはだ悪しと語りて...", learned: false },
+            { id: 75, word: "せうそこ", reading: "しょうそこ", meaning: "①訪問して来意を告げること・挨拶すること\n②手紙（を書くこと）\n③ありさま", origin: "連絡・手紙・訪問挨拶の意。", example: "いづれ、御消息聞こえむ。", learned: false },
+            { id: 76, word: "うつつ", reading: "うつつ", meaning: "①現実\n②正気", origin: "夢の対義語としての「現実・正気」。", example: "夢かとおもふ心と現実とおぼゆ。", learned: false },
+            { id: 77, word: "こと", reading: "こと", meaning: "①こと（事）\n②言葉・和歌（言）\n③こと＋他言で「他の・違っている」（異）\n④「ことにで」で「特に」（殊）", origin: "漢字の割り振りに留意（事・言・異・殊）。", example: "言の葉を重ねても、思ふ心を尽くしがたし。", learned: false },
+            { id: 78, word: "としごろ", reading: "としごろ", meaning: "①長年\n②ここ数年・数年来", origin: "長年の間・ここ数年の間。", example: "としごろ思ひつる事、果たし侍りぬ。", learned: false },
+            { id: 79, word: "ひごろ", reading: "ひごろ", meaning: "①ここ数日・数日来\n②普段", origin: "数日の間・日頃の習慣。", example: "ひごろ訪ね聞こえざりつるは、障る事ありて...", learned: false },
+            { id: 80, word: "うち・おほやけ", reading: "うち・おおやけ", meaning: "①宮中・内裏\n②帝・天皇\n③〔おほやけのみ〕公共のこと・世間", origin: "朝廷・公的な場・帝ご自身を表す。", example: "おほやけの御使ひとして、東国へ下り給ふ。", learned: false },
+            { id: 81, word: "くもゐ", reading: "くもい", meaning: "①空・天\n②宮中", origin: "「雲居」。遥か遠くの空、または高貴な宮中。", example: "雲居の月を眺め給ふ。", learned: false },
+            { id: 82, word: "なさけ", reading: "なさけ", meaning: "①風流心・風情\n②思いやり・同情心", origin: "人への思いやりと自然・風情を解する心。", example: "なさけある人の心には、いと哀れにおぼゆべし。", learned: false },
+            { id: 83, word: "て", reading: "て", meaning: "①文字・筆跡\n②曲・演奏法\n③傷", origin: "手から生み出される筆跡や楽曲、傷。", example: "ていとあやしく書きて、人に取らせ給ふ。", learned: false },
+            { id: 84, word: "よ・よのなか", reading: "よ・よのなか", meaning: "①世間・一生\n②男女の仲・夫婦仲", origin: "社会・生涯、および男女の仲。", example: "よのなかを思い嘆く、二人のかたらひ。", learned: false },
+            { id: 85, word: "あいぎやう", reading: "あいぎょう", meaning: "①かわいらしさ（外面的）\n②思いやり（内面的）", origin: "外見の可愛さと内面の優しさ。", example: "あいぎやうこぼれるばかりにて、いと愛し。", learned: false },
+            { id: 86, word: "きは", reading: "きわ", meaning: "①端\n②身分\n③境目\n④限り", origin: "物の境目や人の身分・ランク。", example: "貴きも賤しきもきはに従ひて、集まり給ふ。", learned: false },
+            { id: 87, word: "ほど", reading: "ほど", meaning: "①時間・頃・時\n②空間・距離・広さ\n③人間関係・身分\n④程度", origin: "時間・空間・身分・程度の広がり。", example: "出で給ふほどに、夜も明けぬ。", learned: false },
+            { id: 88, word: "やがて", reading: "やがて", meaning: "①そのまま\n②すぐに", origin: "状態の継続（そのまま）と時間（すぐに）。", example: "やがて起きもあがらで、伏し給へり。", learned: false },
+            { id: 89, word: "すなはち", reading: "すなわち", meaning: "①すぐに\n②そこで", origin: "即座に行動する様子。", example: "すなはち立ちて出でぬ。", learned: false },
+            { id: 90, word: "なほ", reading: "なお", meaning: "①やはり", origin: "「そうはいってもやはり」。", example: "なほ言ひてむとて、立ち止まり給ふ。", learned: false },
+            { id: 91, word: "おのづから", reading: "おのずから", meaning: "①自然に\n②偶然に\n③万一・もしも", origin: "自ずとそうなること。仮定で万一。", example: "おのづから心得むと、念じ給ふ。", learned: false },
+            { id: 92, word: "なかなか", reading: "なかなか", meaning: "①中途半端に\n②かえって\n③〔感動詞〕そのとおり", origin: "「むしろ」「かえって」のニュアンス。", example: "なかなか言はざるは、言うに勝れり。", learned: false },
+            { id: 93, word: "さすがに", reading: "さすがに", meaning: "①そうはいってもやはり", origin: "前述を受けつつ「そうはいってもやはり」。", example: "さすがに恋しく、いと愛しく覚ゆ。", learned: false },
+            { id: 94, word: "あまた", reading: "あまた", meaning: "①たくさん", origin: "数量が極めて多い様子。", example: "あまたの人が集まりて、夜を明かす。", learned: false },
+            { id: 95, word: "げに", reading: "げに", meaning: "①本当に・なるほど", origin: "「なるほど、本当にその通りだ」。", example: "げに美味なるものなり、言ひて笑ふ。", learned: false },
+            { id: 96, word: "いとど", reading: "いとど", meaning: "①ますます", origin: "「いよいよ・ますます」。", example: "いと美味しく、いとど愛しき心地す。", learned: false },
+            { id: 97, word: "やうやう", reading: "ようよう", meaning: "①だんだん", origin: "次第に変化していく様子。", example: "やうやう白くなりゆく山際、少しあかりて...", learned: false },
+            { id: 98, word: "かづく", reading: "かづく", meaning: "①かぶる\n②褒美をいただく\n③かぶせる\n④褒美を与える", origin: "いただく（四段）／与える（下二段）。", example: "衣をかづきてまかる。殿より禄をかづけ給ふ。", learned: false },
+            { id: 99, word: "いらふ", reading: "いらう", meaning: "①答える", origin: "返事・応答をする。", example: "呼び給へど、いらへもせずして去りぬ。", learned: false },
+            { id: 100, word: "さはる", reading: "さはる", meaning: "①妨げられる・差し支える", origin: "障りがあって進行が邪魔される。", example: "いとわりなき雨にさはりて、参り給はず。", learned: false },
+
+            // --- 101 to 140 ---
+            { id: 101, word: "わづらふ", reading: "わずらう", meaning: "①病気になる\n②思い悩む\n③（動詞の連用形について）…しかねる・…できない", origin: "心身の負担・難しさを表す。", example: "山のおほの大き大納言、日ごろわづらひて...", learned: false },
+            { id: 102, word: "ありく", reading: "ありく", meaning: "①歩き回る・動き回る\n②（動詞の連用形について）…して回る", origin: "あちこち動き回る様。", example: "など、かく寒きに出でてはありくぞ。", learned: false },
+            { id: 103, word: "ねんず", reading: "ねんず", meaning: "①祈る\n②我慢する", origin: "「念ず」。心の中で祈る、または耐え忍ぶ。", example: "たいそうつらいが、我慢して物も言わない。", learned: false },
+            { id: 104, word: "かまふ", reading: "かまふ", meaning: "①組み立てる\n②準備する\n③たくらむ・計画する", origin: "計画を立てて準備・構築する。", example: "西南に竹の垣をかまへて...", learned: false },
+            { id: 105, word: "ことわる", reading: "ことわる", meaning: "①物事を判断する\n②筋道を立てて説明する", origin: "「理（ことわり）」を判別・説明する。", example: "検非違使が自分で判断して...", learned: false },
+            { id: 106, word: "まうく", reading: "まうく", meaning: "①準備する\n②手に入れる", origin: "「設く」。前もって用意する。", example: "あらかじめ言葉をも設けず...", learned: false },
+            { id: 107, word: "すまふ", reading: "すまう", meaning: "①抵抗する\n②辞退する\n③ずっと住み続ける", origin: "抵抗する、争う、辞退する。", example: "女も申しければ、すまふ力がない。", learned: false },
+            { id: 108, word: "たのむ", reading: "たのむ", meaning: "①あてにする\n②あてにさせる・約束する", origin: "あてにする（四段）／あてにさせる（下二段）。", example: "主上軍に勝ち給はば、汝を頼みて我は参らん。", learned: false },
+            { id: 109, word: "あくがる・あこがる", reading: "あくがる・あこがる", meaning: "①さまよい歩く\n②上の空になる・魂が自分から離れる", origin: "心が宙に浮いて浮き浮き・さまよう。", example: "人の言にうちなびき、この山里をあくがれ給ふな。", learned: false },
+            { id: 110, word: "おくる", reading: "おくる", meaning: "①死に遅れる・先立たれる\n②劣る", origin: "人に先立たれて残される、他より劣る。", example: "親にとくおくれて、心もはかなからず...", learned: false },
+            { id: 111, word: "とふ", reading: "とふ", meaning: "①尋ねる\n②訪ねる・見舞う・弔う", origin: "「問う」「訪う」。訪問・質問・弔い。", example: "「そもそも誰が詠んだる」と、いふかひがげてとふ。", learned: false },
+            { id: 112, word: "おとなふ", reading: "おとなう", meaning: "①音を立てる\n②訪問する・手紙を送る", origin: "音を立てて訪れを告げる。", example: "古りにたるあたりにて、おとなひ聞こゆる人もなかりき。", learned: false },
+            { id: 113, word: "ときめく", reading: "ときめく", meaning: "①時にあって栄える\n②寵愛（ちょうあい）される", origin: "時流に乗って栄える、天皇等の愛を受ける。", example: "世の中にときめき給ふ限りの上人...", learned: false },
+            { id: 114, word: "しる", reading: "しる", meaning: "①治める・領有する\n②知る・理解する・わかる", origin: "土地を領有・統治する、理解する。", example: "男、知るの国にある所ありけるに...", learned: false },
+            { id: 115, word: "まねぶ", reading: "まねぶ", meaning: "①口まねする\n②学ぶ・習得する", origin: "真似をする、学んで身につける。", example: "鸚鵡いとはづかしなり。人の言ふことをまねぶなるむ。", learned: false },
+            { id: 116, word: "おづ", reading: "おづ", meaning: "①怖がる", origin: "おじけづく・恐怖を感じる。", example: "巣にも、人のあまたのぼりたるにおちて...", learned: false },
+            { id: 117, word: "あきらむ", reading: "あきらむ", meaning: "①物事の事情を明らかにする", origin: "明瞭にする・はっきりさせる。", example: "昔に富み栄えたる人は、天の時をはかり...", learned: false },
+            { id: 118, word: "つつむ", reading: "つつむ", meaning: "①遠慮する", origin: "気持ちを包み隠して遠慮する。", example: "かぐや姫、いといたく泣き給ふ。人目も今はつつみ給はず...", learned: false },
+            { id: 119, word: "まもる", reading: "まもる", meaning: "①見守る・見つめる", origin: "「目守る」。じっと見つめる。", example: "面をみまもらせ給ひて、物ものたまはず。", learned: false },
+            { id: 120, word: "かしづく", reading: "かしづく", meaning: "①大切に育てる・大切に世話する", origin: "守り育てる、かしずく。", example: "姫君ただならずなり給ひて、かしづき給ふ...", learned: false },
+            { id: 121, word: "ねぶ", reading: "ねぶ", meaning: "①年をとる・大人びる", origin: "成長して大人びた雰囲気になる。", example: "主上今年は八歳にならせ給へども、御年よりねぶしく...", learned: false },
+            { id: 122, word: "いそぐ", reading: "いそぐ", meaning: "①（急いで）準備する", origin: "急いで仕度・用意をする。", example: "御調度などはそこらこしらへさせ給へれば...", learned: false },
+            { id: 123, word: "ものす", reading: "ものす", meaning: "①…をする", origin: "ありとあらゆる動作の代動詞（行う・ある・行く等）。", example: "京より、叔母などおぼしき人の来たれる...", learned: false },
+            { id: 124, word: "うるはし", reading: "うるはし", meaning: "①きちんとしている\n②仲がいい・誠実だ\n③端正で美しい・立派だ", origin: "端正で完璧に美しい様子。", example: "いみじう整ひたる女房、きちんとした姿で...", learned: false },
+            { id: 125, word: "なまめかし", reading: "なまめかし", meaning: "①若々しい\n②優美だ・上品だ", origin: "みずみずしく優美な魅力。", example: "うつくしき子供の心地して、なまめかしきをかしげなり。", learned: false },
+            { id: 126, word: "こころやすし", reading: "こころやすし", meaning: "①安心だ\n②親しい・たやすい", origin: "心が穏やかで安心な状態。", example: "この位去りて、ただ心やすくてあらむとなむ...", learned: false },
+            { id: 127, word: "あいなし", reading: "あいなし", meaning: "①気にくわない・つまらない\n②無益だ\n③〔「あいなく（う）」で〕むやみに", origin: "合わない、面白くない、不快だ。", example: "世の中で語り伝えることは、真実はつまらない...", learned: false },
+            { id: 128, word: "めざまし", reading: "めざまし", meaning: "①気にくわない\n②驚くほどすばらしい", origin: "目が覚めるほど強い刺激（プラス・マイナス双方）。", example: "目が覚めるほど気分の悪くなるような想いをして...", learned: false },
+            { id: 129, word: "めづらし", reading: "めづらし", meaning: "①心ひかれる・すばらしい\n②珍しい", origin: "愛でたい・素晴らしく珍しい。", example: "やはり和歌は驚くほど素晴らしいものだと...", learned: false },
+            { id: 130, word: "ゆゆし", reading: "ゆゆし", meaning: "①不吉だ・いやだ\n②優れている・神聖だ\n③〔連用形「ゆゆしく（う）」で〕たいそう・はなはだしく", origin: "忌々しい神聖さ・不吉さ・はなはだしさ。", example: "身分が上の者の下者もみな泣き騒いでいるのは、たいそう不吉に見える。", learned: false },
+            { id: 131, word: "はづかし", reading: "はずかし", meaning: "①恥ずかしい\n②（こちらが恥ずかしくなるほど相手が）立派だ・優れている", origin: "相手が優れていてこちらが恥ずかしくなるほどだ。", example: "女、わりなく恥ずかしと思ひて伏したり。", learned: false },
+            { id: 132, word: "おどろおどろし", reading: "おどろおどろし", meaning: "①大げさだ・騒々しい\n②気味が悪い", origin: "大げさで気味が悪い様子。", example: "夜いたく更けて、門をいたうおどろおどろしたたけば...", learned: false },
+            { id: 133, word: "つれなし", reading: "つれなし", meaning: "①変化がない\n②平気だ\n③冷淡だ・無関心だ", origin: "反応がない、素知らぬ顔。", example: "雪の山、つれなくて年も返りぬ。", learned: false },
+            { id: 134, word: "やさし", reading: "やさし", meaning: "①つらい・恥ずかしい\n②優美だ・上品だ", origin: "身が縮む思い（つらい）／優美で感心だ。", example: "昨日今日、命の懸かるようなことにとりつかむ...", learned: false },
+            { id: 135, word: "こころぐるし", reading: "こころぐるし", meaning: "①気の毒だ\n②つらい・気になる", origin: "相手を見て心が痛む、または自分がつらい。", example: "温はむ子を法師になしたるならむそ、気の毒だ。", learned: false },
+            { id: 136, word: "ところせし", reading: "ところせし", meaning: "①狭い\n②気づまりだ\n③おおげさだ・重々しい", origin: "場所が狭い、圧迫感があって気づまりだ。", example: "おし払ひ給へる袖の匂ひも、いとところせきまで...", learned: false },
+            { id: 137, word: "くまなし", reading: "くまなし", meaning: "①曇りがない・明るい\n②行き届かないところがない・何でも知っている", origin: "陰・曇りがないこと。", example: "少し立ち出でさせ給ひて、くまなき月をごらんじ...", learned: false },
+            { id: 138, word: "めやすし", reading: "めやすし", meaning: "①（見た目の）感じが良い", origin: "見て安心できる・見た目が良い。", example: "兵衛佐真文、御子の孫にて、品もいやしからず、かたちもめやすし。", learned: false },
+            { id: 139, word: "はしたなし", reading: "はしたなし", meaning: "①中途半端だ\n②きまりが悪い\n③みっともない", origin: "端＝中途半端で居心地が悪い。", example: "帰るにも中途半端なので、命もなく出で立ち...", learned: false },
+            { id: 140, word: "こよなし", reading: "こよなし", meaning: "①格段に優れている\n②格段に劣っている\n③〔連用形「こよなく（う）」で〕格段に", origin: "段差が格段にあること。", example: "「やごとなき人の選へることは、格段に勝りけり。」", learned: false }
         ];
 
         const DEFAULT_NEWS = [
-            { id: 1, date: "2026/10/25", title: "🎉 お知らせページを追加！", content: "「お知らせ・アップデート情報」ページを追加しました！新機能やアップデート情報をここからチェックできるようになりました！ぜひご活用ください！" },
-            { id: 2, date: "2026/10/25", title: "✍️ 記述（キーボード入力）テストを追加！", content: "クイズモードに「記述（キーボード入力）」を追加しました！現代語訳から古文単語を直接キーボードで打ち込んで解答する実戦モードです！" },
-            { id: 3, date: "2026/10/25", title: "✨ 例文穴埋めクイズを追加！", content: "4択クイズに「例文穴埋めモード」を追加しました！文脈から適切な古文単語を推理する実戦力を磨きましょう！" }
+            { id: 1, date: "2026/11/04", title: "🎉 単語データ修正完了！", content: "No.113を「時にあって栄える」へと更新しました！No.131「（こちらが恥ずかしくなるほど相手が）立派だ・優れている」なども含め最新状態です！" },
+            { id: 2, date: "2026/11/04", title: "🎉 単語No.101〜140を追加！", content: "単語カードデータを大幅拡充！No.51〜140（全90単語）を写真通り正確に収録しました！81番「くもゐ」の校正も完了しています！" },
+            { id: 3, date: "2026/11/04", title: "✍️ 記述（単語 ➔ 意味）テストを追加！", content: "クイズモードに「記述：単語 ➔ 現代語訳・意味」モードを追加しました！古文単語を見て、その意味を直接自分の言葉やひらがなで打つ実戦テストです！" }
         ];
 
         // State Management
@@ -784,7 +839,7 @@
         }
 
         function loadVocabData() {
-            const saved = localStorage.getItem('kobun_vocab_51_100_v5');
+            const saved = localStorage.getItem('kobun_vocab_51_140_v9');
             if (saved) {
                 try {
                     vocabList = JSON.parse(saved);
@@ -797,7 +852,7 @@
         }
 
         function loadNewsData() {
-            const saved = localStorage.getItem('kobun_news_v1');
+            const saved = localStorage.getItem('kobun_news_v3');
             if (saved) {
                 try {
                     newsList = JSON.parse(saved);
@@ -810,20 +865,20 @@
         }
 
         window.saveVocabData = function(shouldSyncCloud = true) {
-            localStorage.setItem('kobun_vocab_51_100_v5', JSON.stringify(vocabList));
+            localStorage.setItem('kobun_vocab_51_140_v9', JSON.stringify(vocabList));
             updateDashboard();
         };
 
         function saveNewsData() {
-            localStorage.setItem('kobun_news_v1', JSON.stringify(newsList));
+            localStorage.setItem('kobun_news_v3', JSON.stringify(newsList));
             renderNews();
         }
 
         // Reset Data
         document.getElementById('resetDataBtn').addEventListener('click', () => {
             if (confirm("データを初期化しますか？")) {
-                localStorage.removeItem('kobun_vocab_51_100_v5');
-                localStorage.removeItem('kobun_news_v1');
+                localStorage.removeItem('kobun_vocab_51_140_v9');
+                localStorage.removeItem('kobun_news_v3');
                 vocabList = [...DEFAULT_VOCAB];
                 newsList = [...DEFAULT_NEWS];
                 saveVocabData(false);
@@ -886,7 +941,7 @@
             const dakutenMap = {
                 'か':'が', 'き':'ぎ', 'く':'ぐ', 'け':'げ', 'こ':'ご',
                 'さ':'ざ', 'し':'じ', 'す':'ず', 'せ':'ぜ', 'そ':'ぞ',
-                'た':'だ', 'ち':'ぢ', 'つ':'づ', 'て':'で', 'と':'ど',
+                'た':'だ', 'ち':'ぢ', 'つ':'づ', 'て':'で', 'と':'と',
                 'は':'ば', 'ひ':'び', 'ふ':'ぶ', 'へ':'べ', 'ほ':'ぼ',
                 'が':'か', 'ぎ':'き', 'ぐ':'く', 'げ':'け', 'ご':'こ',
                 'ざ':'さ', 'じ':'し', 'ず':'す', 'ぜ':'せ', 'ぞ':'そ',
@@ -1034,13 +1089,15 @@
         function updateFilteredCards() {
             const filter = document.getElementById('cardFilter').value;
             const startNo = parseInt(document.getElementById('cardStartNo').value) || 51;
-            const endNo = parseInt(document.getElementById('cardEndNo').value) || 100;
+            const endNo = parseInt(document.getElementById('cardEndNo').value) || 140;
 
             filteredIndices = [];
             vocabList.forEach((item, index) => {
                 if (filter === 'all') filteredIndices.push(index);
-                else if (filter === 'part1' && item.id <= 75) filteredIndices.push(index);
-                else if (filter === 'part2' && item.id >= 76) filteredIndices.push(index);
+                else if (filter === 'part1' && item.id >= 51 && item.id <= 75) filteredIndices.push(index);
+                else if (filter === 'part2' && item.id >= 76 && item.id <= 100) filteredIndices.push(index);
+                else if (filter === 'part3' && item.id >= 101 && item.id <= 120) filteredIndices.push(index);
+                else if (filter === 'part4' && item.id >= 121 && item.id <= 140) filteredIndices.push(index);
                 else if (filter === 'custom' && item.id >= startNo && item.id <= endNo) filteredIndices.push(index);
                 else if (filter === 'learned' && item.learned) filteredIndices.push(index);
                 else if (filter === 'unlearned' && !item.learned) filteredIndices.push(index);
@@ -1178,12 +1235,16 @@
             // Filter pool by chosen range
             let pool = [...vocabList];
             if (rangeType === 'part1') {
-                pool = pool.filter(v => v.id <= 75);
+                pool = pool.filter(v => v.id >= 51 && v.id <= 75);
             } else if (rangeType === 'part2') {
-                pool = pool.filter(v => v.id >= 76);
+                pool = pool.filter(v => v.id >= 76 && v.id <= 100);
+            } else if (rangeType === 'part3') {
+                pool = pool.filter(v => v.id >= 101 && v.id <= 120);
+            } else if (rangeType === 'part4') {
+                pool = pool.filter(v => v.id >= 121 && v.id <= 140);
             } else if (rangeType === 'custom') {
                 const s = parseInt(document.getElementById('quizStartNo').value) || 51;
-                const e = parseInt(document.getElementById('quizEndNo').value) || 100;
+                const e = parseInt(document.getElementById('quizEndNo').value) || 140;
                 pool = pool.filter(v => v.id >= s && v.id <= e);
             } else if (rangeType === 'unlearned') {
                 pool = pool.filter(v => !v.learned);
@@ -1231,7 +1292,7 @@
             const optionsContainer = document.getElementById('quiz-options');
             const inputContainer = document.getElementById('quiz-input-container');
 
-            if (q.type === 'input' || q.type === 'input_example') {
+            if (q.type === 'input' || q.type === 'input_k2m' || q.type === 'input_example') {
                 // Input Modes
                 optionsContainer.classList.add('hidden');
                 inputContainer.classList.remove('hidden');
@@ -1239,12 +1300,16 @@
                 if (q.type === 'input') {
                     qBadge.innerText = "記述（意味 ➔ 単語）";
                     qWord.innerText = q.target.meaning;
-                    qSub.innerText = "にあてはまる古文単語を入力してください（ひらがな可）";
+                    qSub.innerText = "にあてはまる古文単語を入力してください";
+                } else if (q.type === 'input_k2m') {
+                    qBadge.innerText = "記述（単語 ➔ 意味）";
+                    qWord.innerHTML = `${q.target.word} <span class="text-sm font-sans font-normal text-indigo-600">（${q.target.reading}）</span>`;
+                    qSub.innerText = "の主な現代語訳・意味を入力してください（キーワード一部一致OK）";
                 } else if (q.type === 'input_example') {
                     qBadge.innerText = "記述（例文穴埋め）";
                     const maskedSentence = maskExampleSentence(q.target.example, q.target.word);
                     qWord.innerHTML = `<span class="text-indigo-900 leading-relaxed font-serif-jp">「${maskedSentence}」</span>`;
-                    qSub.innerText = "（　　）に入る適切な古文単語を入力してください（ひらがな可）";
+                    qSub.innerText = "（　　）に入る適切な古文単語を入力してください";
                 }
 
                 const inputEl = document.getElementById('quizTextInput');
@@ -1281,7 +1346,7 @@
                     
                     let labelText = q.type === 'k2m' ? choice.meaning : `${choice.word}（${choice.reading}）`;
 
-                    btn.innerHTML = `<span>${labelText}</span><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500 text-xs"></i>`;
+                    btn.innerHTML = `<span>${labelText.replace(/\n/g, ' / ')}</span><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500 text-xs"></i>`;
                     btn.onclick = () => selectQuizAnswer(choice, q.target);
                     optionsContainer.appendChild(btn);
                 });
@@ -1314,16 +1379,28 @@
                 return;
             }
 
-            // Normalization & Answer Checking
-            const normalizedWord = correct.word.toLowerCase();
-            const normalizedReading = correct.reading.toLowerCase();
-            
-            let validAnswers = [normalizedWord, normalizedReading];
-            if (correct.word.includes('・')) {
-                correct.word.split('・').forEach(part => validAnswers.push(part.trim().toLowerCase()));
+            let isCorrect = false;
+
+            if (q.type === 'input_k2m') {
+                // 単語➔意味を答えるモードの判定
+                const cleanMeaning = correct.meaning.replace(/[①②③④⑤〔〕（）]/g, ' ').toLowerCase();
+                const meaningParts = cleanMeaning.split(/[\n・,\s\/\-]+/).filter(p => p.length > 0);
+                
+                // 入力された文字列が模範解答のいずれかのキー単語を含んでいるかチェック
+                isCorrect = meaningParts.some(part => userText.includes(part) || part.includes(userText));
+            } else {
+                // 現代語訳・例文➔単語を答えるモードの判定
+                const normalizedWord = correct.word.toLowerCase();
+                const normalizedReading = correct.reading.toLowerCase();
+                
+                let validAnswers = [normalizedWord, normalizedReading];
+                if (correct.word.includes('・')) {
+                    correct.word.split('・').forEach(part => validAnswers.push(part.trim().toLowerCase()));
+                }
+
+                isCorrect = validAnswers.some(ans => ans === userText || userText.includes(ans) || ans.includes(userText));
             }
 
-            const isCorrect = validAnswers.some(ans => ans === userText || userText.includes(ans) || ans.includes(userText));
             if (isCorrect) quizScore++;
 
             inputEl.disabled = true;
@@ -1350,14 +1427,14 @@
                 badge.innerText = "不正解...";
             }
 
-            correctText.innerText = `正解：${correct.word}（${correct.reading}） ➔ ${correct.meaning}`;
+            correctText.innerText = `正解：${correct.word}（${correct.reading}）`;
             
-            let explanationContent = `📖 現代語訳: ${correct.meaning}\n`;
+            let explanationContent = `📖 現代語訳:\n${correct.meaning}\n\n`;
             if (correct.origin) {
                 explanationContent += `💡 解法ヒント: ${correct.origin}\n`;
             }
             if (correct.example) {
-                explanationContent += `🌸 原文: 「${correct.example}」`;
+                explanationContent += `🌸 例文: 「${correct.example}」`;
             }
             detailText.innerText = explanationContent;
 
@@ -1418,7 +1495,7 @@
                         <div class="font-serif-jp font-bold text-slate-800 text-base">${item.word}</div>
                         <div class="text-xs text-slate-400">（${item.reading}）</div>
                     </td>
-                    <td class="p-3 font-medium text-slate-700">${item.meaning}</td>
+                    <td class="p-3 font-medium text-slate-700 whitespace-pre-line">${item.meaning}</td>
                     <td class="p-3 text-xs text-slate-500 hidden md:table-cell max-w-xs truncate" title="${item.origin}">${item.origin || '-'}</td>
                     <td class="p-3 text-center">
                         <button onclick="toggleLearnedInList(${item.id})" class="text-xs px-2.5 py-1 rounded-full font-bold transition ${item.learned ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}">
